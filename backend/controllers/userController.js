@@ -5,13 +5,12 @@ import  generateToken  from '../utils/generateToken.js  ';
 import { jwtVerify } from 'jose';
 import JWT_SECRET from '../utils/getJwtSecrete.js';
 
-
 // @desc    Register a new user
 // @route   POST /api/user
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body || {};
+  const { name, email, password,role  } = req.body || {};
 
-  if (!name || !email || !password) {
+  if (!name || !email || !password || !role ) {
     res.status(400);
     throw new Error('Name, email and password are required');
   }
@@ -32,6 +31,7 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password: hashedPassword,
+    role, 
   });
 
   //create Tokens
@@ -52,6 +52,7 @@ const registerUser = asyncHandler(async (req, res) => {
     _id: user._id,
     name: user.name,
     email: user.email,
+    role: user.role
   });
 });
 
@@ -82,7 +83,7 @@ const login = asyncHandler(async (req, res) => {
       accessToken,
       _id: user.id,
       email: user.email,
-      //role: user.role,
+      role: user.role,
     });
   } else {
     res.status(400);

@@ -15,9 +15,10 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please enter blog description'],
   },
- /* image: {
+  image: {
     type: String, 
-  },*/
+  },
+  
   category: {
     type: String,
     enum: [

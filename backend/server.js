@@ -13,6 +13,7 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser())
 
 app.use('/api/blog/', blogRoutes);
 app.use('/api/auth/', authRoute); 
