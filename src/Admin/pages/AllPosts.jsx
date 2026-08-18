@@ -1,19 +1,101 @@
-import React from 'react';
-import { Edit, Trash2, CheckCircle, Clock, Plus, Search } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Edit, Trash2, CheckCircle, Plus, Search, X, AlertTriangle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { getBlogs, deleteBlog, updateBlog } from '../../api/Blog';
 
 export default function AllPosts() {
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
+
+  
+  const [postToDelete, setPostToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const [postToEdit, setPostToEdit] = useState(null);
+  const [editFormData, setEditFormData] = useState({ title: '', category: '' });
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        const data = await getBlogs();
+        setPosts(Array.isArray(data) ? data : data?.blogs || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPosts();
+  }, []);
+
+  const confirmDelete = async () => {
+    if (!postToDelete) return;
+    setIsDeleting(true);
+    try {
+      await deleteBlog(postToDelete._id);
+      setPosts((prev) => prev.filter((post) => post._id !== postToDelete._id));
+      setPostToDelete(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleOpenEdit = (post) => {
+    setPostToEdit(post);
+    setEditFormData({
+      title: post.title || '',
+      category: post.category || '',
+    });
+  };
+
+  
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    if (!postToEdit) return;
+
+    setIsUpdating(true);
+    try {
+      const updatedData = await updateBlog(postToEdit._id, editFormData);
+      setPosts((prev) =>
+        prev.map((post) =>
+          post._id === postToEdit._id
+            ? { ...post, ...editFormData, ...(updatedData || {}) }
+            : post
+        )
+      );
+      setPostToEdit(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const filteredPosts = posts.filter((post) =>
+    post.title?.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+    <div className="w-full p-6 space-y-6">
+        <div className='text-center'>
           <h2 className="text-2xl font-serif font-bold text-[#0a1128]">Blog Posts</h2>
-          <p className="text-slate-500 text-sm">View and manage all published and draft articles</p>
+          <p className="text-slate-500 text-sm">View and manage all published articles</p>
         </div>
-        <button className="bg-[#001f54] hover:bg-[#034078] text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors">
-          <Plus size={16} />
-          <span>New Article</span>
-        </button>
-      </div>
+
+      {error && (
+        <div className="flex items-center justify-between text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+          <span>{error}</span>
+          <button onClick={() => setError('')} className="text-red-400 hover:text-red-600">
+            <X size={16} />
+          </button>
+        </div>
+      )}
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
@@ -21,70 +103,162 @@ export default function AllPosts() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
             <input
               type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search articles..."
               className="w-full pl-9 pr-4 py-1.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#034078]"
             />
           </div>
         </div>
 
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-100">
-              <th className="py-3 px-6 font-semibold">Title</th>
-              <th className="py-3 px-6 font-semibold">Category</th>
-              <th className="py-3 px-6 font-semibold">Status</th>
-              <th className="py-3 px-6 font-semibold text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 text-sm">
-            <tr>
-              <td className="py-4 px-6 font-medium text-slate-900">The Revival of 90s Minimalist Tailoring</td>
-              <td className="py-4 px-6 text-slate-500">Trends</td>
-              <td className="py-4 px-6">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
-                  <CheckCircle size={12} /> Published
-                </span>
-              </td>
-              <td className="py-4 px-6 text-right">
-                <div className="flex items-center justify-end gap-2 text-slate-400">
-                  <button className="hover:text-[#034078] p-1"><Edit size={16} /></button>
-                  <button className="hover:text-red-500 p-1"><Trash2 size={16} /></button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td className="py-4 px-6 font-medium text-slate-900">Autumn Color Palette Preview 2026</td>
-              <td className="py-4 px-6 text-slate-500">Runway</td>
-              <td className="py-4 px-6">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700">
-                  <Clock size={12} /> Scheduled
-                </span>
-              </td>
-              <td className="py-4 px-6 text-right">
-                <div className="flex items-center justify-end gap-2 text-slate-400">
-                  <button className="hover:text-[#034078] p-1"><Edit size={16} /></button>
-                  <button className="hover:text-red-500 p-1"><Trash2 size={16} /></button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td className="py-4 px-6 font-medium text-slate-900">Sustainable Silk Alternatives</td>
-              <td className="py-4 px-6 text-slate-500">Eco Fashion</td>
-              <td className="py-4 px-6">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
-                  <CheckCircle size={12} /> Published
-                </span>
-              </td>
-              <td className="py-4 px-6 text-right">
-                <div className="flex items-center justify-end gap-2 text-slate-400">
-                  <button className="hover:text-[#034078] p-1"><Edit size={16} /></button>
-                  <button className="hover:text-red-500 p-1"><Trash2 size={16} /></button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        {loading ? (
+          <p className="p-6 text-sm text-slate-500">Loading posts...</p>
+        ) : filteredPosts.length === 0 ? (
+          <p className="p-6 text-sm text-slate-500">No posts found.</p>
+        ) : (
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-100">
+                <th className="py-3 px-6 font-semibold">Title</th>
+                <th className="py-3 px-6 font-semibold">Category</th>
+                <th className="py-3 px-6 font-semibold">Status</th>
+                <th className="py-3 px-6 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 text-sm">
+              {filteredPosts.map((post) => (
+                <tr key={post._id} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="py-4 px-6 font-medium text-slate-900">{post.title}</td>
+                  <td className="py-4 px-6 text-slate-500">{post.category}</td>
+                  <td className="py-4 px-6">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
+                      <CheckCircle size={12} /> Published
+                    </span>
+                  </td>
+                  <td className="py-4 px-6 text-right">
+                    <div className="flex items-center justify-end gap-2 text-slate-400">
+                      <button
+                        onClick={() => handleOpenEdit(post)}
+                        className="hover:text-[#034078] p-1.5 rounded-md hover:bg-slate-100 transition-colors"
+                        title="Edit post"
+                      >
+                        <Edit size={16} />
+                      </button>
+                      <button
+                        onClick={() => setPostToDelete(post)}
+                        className="hover:text-red-500 p-1.5 rounded-md hover:bg-red-50 transition-colors"
+                        title="Delete post"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
+
+      {postToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-red-100 text-red-600 rounded-full shrink-0">
+                <AlertTriangle size={24} />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-slate-900">Delete Post</h3>
+                <p className="text-sm text-slate-500 mt-1">
+                  Are you sure you want to delete <span className="font-semibold text-slate-800">"{postToDelete.title}"</span>? This action cannot be undone.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                type="button"
+                onClick={() => setPostToDelete(null)}
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-50"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    
+      {postToEdit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <h3 className="text-lg font-bold text-[#0a1128]">Edit Article</h3>
+              <button
+                onClick={() => setPostToEdit(null)}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-md"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateSubmit} className="space-y-4 mt-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editFormData.title}
+                  onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#034078]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+                  Category
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editFormData.category}
+                  onChange={(e) => setEditFormData({ ...editFormData, category: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#034078]"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setPostToEdit(null)}
+                  disabled={isUpdating}
+                  className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isUpdating}
+                  className="px-4 py-2 text-sm font-medium text-white bg-[#001f54] hover:bg-[#034078] rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {isUpdating ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

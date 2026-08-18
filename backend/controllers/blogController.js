@@ -1,17 +1,27 @@
 import Blog from "../models/BlogModels.js";
+import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
 import uploadToCloudinary from "../utils/uploadToCloudinary.js";
+
+const ensureAdmin = (req, res) => {
+  if (!req.user || req.user.role !== "admin") {
+    res.status(403);
+    throw new Error("You do not have permission to manage blog posts");
+  }
+};
+
+const ensureValidBlogId = (id, res) => {
+  if (!mongoose.isValidObjectId(id)) {
+    res.status(400);
+    throw new Error("Invalid blog ID");
+  }
+};
 
 // @desc    Get all blogs
 // @route   GET /api/blog
 // @access  Public
 const getBlog = asyncHandler(async (req, res) => {
-  const blogs = await Blog.find();
-
-  if (!blogs || blogs.length === 0) {
-    res.status(404);
-    throw new Error("No blogs found");
-  }
+  const blogs = await Blog.find().sort({ createdAt: -1 });
 
   res.status(200).json(blogs);
 });
@@ -20,12 +30,14 @@ const getBlog = asyncHandler(async (req, res) => {
 // @route   POST /api/blog
 // @access  Private
 const createBlog = asyncHandler(async (req, res) => {
+  ensureAdmin(req, res);
   const { title, description, category } = req.body;
 
   if (!title || !description || !category) {
     res.status(400);
     throw new Error("Please fill in all fields");
   }
+
 
   if (!req.file) {
     res.status(400);
@@ -45,10 +57,22 @@ const createBlog = asyncHandler(async (req, res) => {
   res.status(201).json(blog);
 });
 
+const getBlogBySlug = asyncHandler(async (req, res) => {
+  const blog = await Blog.findOne({slug: req.params.slug } );
+
+  if (!blog) {
+    res.status(404);
+    throw new Error('blog not found');
+  }
+
+  res.status(200).json(blog);
+});
 // @desc    Update a blog
 // @route   PUT /api/blog/:id
 // @access  Private
 const updateBlog = asyncHandler(async (req, res) => {
+  ensureAdmin(req, res);
+  ensureValidBlogId(req.params.id, res);
   const blog = await Blog.findById(req.params.id);
 
   if (!blog) {
@@ -83,6 +107,8 @@ const updateBlog = asyncHandler(async (req, res) => {
 // @route   DELETE /api/blog/:id
 // @access  Private
 const deleteBlog = asyncHandler(async (req, res) => {
+  ensureAdmin(req, res);
+  ensureValidBlogId(req.params.id, res);
   const blog = await Blog.findById(req.params.id);
 
   if (!blog) {
@@ -108,4 +134,5 @@ export default {
   createBlog,
   updateBlog,
   deleteBlog,
+  getBlogBySlug
 };

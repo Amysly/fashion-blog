@@ -3,9 +3,7 @@ import { Search, Bell, Plus} from 'lucide-react';
 
 const Header = () => {
   return (
-   <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <header className="h-20 bg-white border-b border-slate-200 px-8 flex items-center justify-between shadow-sm">
+    <header className="h-20 shrink-0 bg-white border-b border-slate-200 px-8 flex items-center justify-between shadow-sm">
           {/* Search bar */}
           <div className="relative w-96">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
@@ -27,8 +25,7 @@ const Header = () => {
               <span>New Post</span>
             </button>
           </div>
-        </header>
-        </div>
+    </header>
   )
 }
 

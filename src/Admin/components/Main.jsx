@@ -1,16 +1,18 @@
 import React from 'react'
 import { Mail, TrendingUp, Eye, FileText, Send} from 'lucide-react';
 import Table from './Table';
+import { useAuth } from '../../context/AuthContext';
 //import NewsletterDetail from '../pages/NewsletterDetail';
 
 const Main = () => {
+  const {user} = useAuth()
   return (
     <div>
       <main className="p-8 flex-1 overflow-y-auto space-y-8">
           {/* Welcome Banner */}
           <div className="bg-gradient-to-r from-[#0a1128] via-[#001f54] to-[#034078] rounded-2xl p-6 text-white shadow-md flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-serif font-semibold">Welcome back, Admin</h2>
+              <h2 className="text-2xl font-serif font-semibold">Welcome back, {user?.name?.split(' ')[0] || "admin"}! 👋</h2>
               <p className="text-slate-300 text-sm mt-1">Here is what is happening with your fashion journal today.</p>
             </div>
             <button className="bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/20 px-4 py-2 rounded-lg text-sm text-white transition-all">

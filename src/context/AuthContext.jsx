@@ -10,32 +10,37 @@
 export function AuthProvider({children}) {
     const [accessToken, setAccessToken] = useState(null);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); 
 
- useEffect(() => {
+
+   useEffect(() => {
     const loadAuth = async () => {
       try {
-        const { accessToken: newToken, user } = await refreshAccessToken();
+        const session = await refreshAccessToken();
+        if (!session) return;
+
+        const { accessToken: newToken, user } = session;
         setAccessToken(newToken);
         setUser(user);
       } catch (err) {
-        console.log('Failed to refresh access token', err);
+        console.error('Failed to refresh access token', err);
+      } finally {
+        setLoading(false); 
       }
     };
     loadAuth();
-}, []);
+  }, []);
 
-useEffect(() => {
+  useEffect(() => {
     setStoredAccessToken(accessToken);
-}, [accessToken]);
+  }, [accessToken]);
 
   return (
-    <AuthContext.Provider
-      value={{ accessToken, setAccessToken, user, setUser }}
-    >
+    <AuthContext.Provider value={{ accessToken, setAccessToken, user, setUser, loading }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
 export function useAuth() {
     return useContext(AuthContext)

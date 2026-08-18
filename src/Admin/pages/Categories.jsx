@@ -3,7 +3,7 @@ import { Edit, Trash2 } from 'lucide-react';
 
 export default function Categories() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-5">
       <div>
         <h2 className="text-2xl font-serif font-bold text-[#0a1128]">Categories</h2>
         <p className="text-slate-500 text-sm">Organize fashion subjects and taxonomy</p>

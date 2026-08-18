@@ -8,5 +8,7 @@ router.post('/register', userController.registerUser);
 router.post('/login', userController.login);
 router.post('/logout', userController.logOut);
 router.post('/refresh', userController.refresh);
+router.patch('/profile', protect, userController.updateProfile);
+//router.patch('/password', protect, userController.updatePassword);
 
 export default router;

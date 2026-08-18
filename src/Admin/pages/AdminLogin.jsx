@@ -7,7 +7,7 @@ import { loginUser } from '../../api/Auth';
 
 const AdminLogin = () => {
   const navigate = useNavigate()
-  const {setAcessToken, setUser} = useAuth()
+  const { setAccessToken, setUser } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -35,7 +35,7 @@ const AdminLogin = () => {
         }
         setAccessToken(accessToken);
         setUser(user);
-           navigate('/admin/dashboard'); 
+           navigate('/admin'); 
     } catch (err) {
         setError(err.message);
     }finally{

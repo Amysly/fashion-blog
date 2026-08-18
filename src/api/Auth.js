@@ -1,6 +1,12 @@
 import axios from "axios";
+import { getStoredAccessToken } from '../lib/authToken';
 
 const AUTH_API = '/api/auth/';
+axios.defaults.withCredentials = true;
+
+const authConfig = () => ({
+    headers: { Authorization: `Bearer ${getStoredAccessToken()}` },
+});
 
 export const registerUser = async (userData) => {
     try {
@@ -34,9 +40,29 @@ export const logoutUser = async () => {
 export const refreshAccessToken = async () => {
     try {
         const res = await axios.post(`${AUTH_API}refresh`);
-        return res.data;
+        return res.status === 204 ? null : res.data;
     } catch (err) {
+        if (err.response?.status === 401) return null;
+
         const message = err.response?.data?.message || 'Failed to refresh token';
         throw new Error(message);
     }
 };
+
+export const updateProfile = async (profile) => {
+    try {
+        const { data } = await axios.patch(`${AUTH_API}profile`, profile, authConfig());
+        return data.user;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Failed to update profile');
+    }
+};
+
+/*export const updatePassword = async (passwords) => {
+    try {
+        const { data } = await axios.patch(`${AUTH_API}password`, passwords, authConfig());
+        return data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Failed to update password');
+    }
+};*/

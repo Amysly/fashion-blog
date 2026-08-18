@@ -7,9 +7,14 @@ import {
   FolderOpen,
   Settings,
   LogOut,
+  User,
+  ShoppingBag
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
+import { useAuth } from '../../context/AuthContext';
+import {  logoutUser } from '../../api/Auth';
+import { useNavigate } from 'react-router-dom';
 
 const navLinks = [
   { linkName: 'Dashboard', path: '/admin', icon: <LayoutDashboard size={18} />, end: true },
@@ -17,10 +22,26 @@ const navLinks = [
   { linkName: 'All Posts', path: '/admin/all-post', icon: <FileText size={18} /> },
   { linkName: 'Subscribers', path: '/admin/subscribers', icon: <Mail size={18} /> },
   { linkName: 'Categories', path: '/admin/categories', icon: <FolderOpen size={18} /> },
+  { linkName: 'Trending Oufit', path: '/admin/trending-outfit', icon: <FolderOpen size={18} /> },
+  { linkName: 'Product', path: '/admin/product', icon: <ShoppingBag size={18} /> },
+  { linkName: 'Profile', path: '/admin/profile', icon: <User size={18} /> },
   { linkName: 'Settings', path: '/admin/settings', icon: <Settings size={18} /> },
 ];
 
 const SideBar = () => {
+  const navigate = useNavigate()
+  const {user} = useAuth()
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser()
+    } catch (err) {
+      console.log('logout failed',err)
+    }finally{
+      navigate('/')
+    }
+    
+  }
   return (
     <div className="h-screen sticky top-0">
       <aside className="w-64 bg-[#0a1128] text-white flex flex-col h-full justify-between shrink-0 shadow-xl">
@@ -69,11 +90,12 @@ const SideBar = () => {
                 AD
               </div>
               <div>
-                <p className="text-sm font-medium text-white leading-none">Admin User</p>
+                <p className="text-sm font-medium text-white leading-none">{user?.name}</p>
                 <span className="text-xs text-slate-400">Editor-in-Chief</span>
               </div>
             </div>
             <button 
+            onClick={handleLogout}
               type="button" 
               className="text-slate-400 hover:text-red-400 p-1 transition-colors"
               title="Logout"
