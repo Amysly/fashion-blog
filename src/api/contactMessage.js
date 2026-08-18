@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const  MESSAGE_API = '/api/contact'
+const  MESSAGE_API = `${import.meta.env.VITE_API_URL}/api/contact`
 const api = axios.create({
   baseURL: MESSAGE_API,
   withCredentials: true,

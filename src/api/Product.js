@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getStoredAccessToken } from "../lib/authToken";
 
-const PRODUCT_API = '/api/products/';
+const PRODUCT_API =`${import.meta.env.VITE_API_URL}/api/products/`;
 axios.defaults.withCredentials = true;
 
 const authHeader = () => ({

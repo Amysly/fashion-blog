@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getStoredAccessToken } from "../lib/authToken";
 
-const SUBSCRIBE_API = '/api/subscribe';
+const SUBSCRIBE_API =`${import.meta.env.VITE_API_URL}/api/subscribe` ;
 axios.defaults.withCredentials = true;
 
 const authHeader = () => ({
