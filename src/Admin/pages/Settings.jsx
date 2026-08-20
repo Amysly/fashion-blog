@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { updateProfile } from '../../api/Auth';
+import { Loader2 } from 'lucide-react';
 
 export default function Settings() {
   const { user, setUser } = useAuth();
@@ -45,7 +46,7 @@ export default function Settings() {
     <div className="min-h-screen w-full bg-slate-50 flex items-center justify-center p-4 md:p-8">
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 space-y-6 w-full max-w-4xl">
         <div className="border-b border-slate-100 pb-4">
-          <h2 className="text-2xl font-serif font-bold text-[#0a1128]">Admin Profile & Preferences</h2>
+          <h2 className="text-lg sm:text-2xl font-serif font-bold text-[#0a1128]">Admin Profile</h2>
           <p className="text-slate-500 text-sm">Manage platform settings and sole administrator credentials</p>
         </div>
 
@@ -62,7 +63,8 @@ export default function Settings() {
 
         <div className="space-y-6">
           <div className="flex items-center justify-center">
-            <div className="w-20 h-20 rounded-full bg-[#0a1128] text-white flex items-center justify-center font-serif text-2xl font-bold border-2 border-[#034078]">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#0a1128] text-white flex items-center 
+            justify-center font-serif text-lg sm:text-2xl font-bold border-2 border-[#034078]">
               {formData.name ? formData.name.slice(0, 2).toUpperCase() : 'AD'}
             </div>
           </div>
@@ -111,7 +113,13 @@ export default function Settings() {
               disabled={isPending}
               className="px-6 py-2.5 bg-[#034078] hover:bg-[#001f54] text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
             >
-              {isPending ? 'Saving...' : 'Save Changes'}
+              {isPending ? 
+               (
+                <span className="flex items-center gap-2">
+                 <Loader2 size={14} className="animate-spin" /> Saving...
+                   </span>) :
+                  ('Saved Change')
+                  }
             </button>
           </div>
         </div>

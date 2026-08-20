@@ -48,15 +48,19 @@ export default function AllSubscribers() {
 
   return (
     <div className="space-y-6 p-5">
-      {/* Header Actions */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-serif font-bold text-[#0a1128]">Newsletter Subscribers</h2>
-          <p className="text-slate-500 text-sm">Manage audience, signups, and email stats</p>
+          <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#0a1128]">
+            Newsletter Subscribers
+          </h2>
+          <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
+            Manage audience, signups, and email stats
+          </p>
         </div>
-        <div className="">
-          <button className="px-4 py-2 bg-[#001f54] hover:bg-[#034078] text-white rounded-lg text-sm font-medium flex items-center gap-2 transition-colors">
-            <Send size={16} /> Create Campaign
+        <div>
+          <button className="w-full sm:w-auto px-4 py-2.5 bg-[#001f54] hover:bg-[#034078] text-white rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors">
+            <Send size={16} />
+            <span>Create Campaign</span>
           </button>
         </div>
       </div>
@@ -93,7 +97,6 @@ export default function AllSubscribers() {
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        {/* Search & Filter Bar */}
         <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
           <div className="relative w-72">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />

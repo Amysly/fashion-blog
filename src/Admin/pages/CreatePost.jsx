@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Image as ImageIcon } from 'lucide-react';
 import { createBlog } from '../../api/Blog';
 import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 const BLOG_CATEGORIES = [
   'Trends',
@@ -68,7 +69,7 @@ export default function CreatePost() {
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 space-y-6">
       <div className="border-b border-slate-100 pb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-serif font-bold text-[#0a1128]">Create New Post</h2>
+          <h2 className="text-lg sm:text-2xl font-serif font-bold text-[#0a1128]">Create New Post</h2>
           <p className="text-slate-500 text-sm">Craft and publish a new fashion article</p>
         </div>
         <div className="flex gap-3">
@@ -76,9 +77,16 @@ export default function CreatePost() {
             type="button"
             onClick={handlePublish}
             disabled={isPending}
-            className="px-4 py-2 bg-[#034078] hover:bg-[#001f54] text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-[#034078] hover:bg-[#001f54] text-white 
+             rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
           >
-            {isPending ? 'Publishing...' : 'Publish Article'}
+            {isPending ?
+             (
+             <span className="flex items-center gap-2">
+                <Loader2 size={14} className="animate-spin" /> Publishing Article...
+                </span>) :
+               ('Publish Article')
+            }
           </button>
         </div>
       </div>

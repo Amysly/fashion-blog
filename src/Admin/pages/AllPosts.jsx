@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Edit, Trash2, CheckCircle, Plus, Search, X, AlertTriangle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { X, AlertTriangle } from 'lucide-react';
 import { getBlogs, deleteBlog, updateBlog } from '../../api/Blog';
+import SearchInput from '../components/SearchInput';
+import AdminTable from '../components/AdminTable';
 
 export default function AllPosts() {
-  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
 
-  
   const [postToDelete, setPostToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -24,7 +23,7 @@ export default function AllPosts() {
         const data = await getBlogs();
         setPosts(Array.isArray(data) ? data : data?.blogs || []);
       } catch (err) {
-        setError(err.message);
+        setError(err.message || 'Failed to load posts');
       } finally {
         setLoading(false);
       }
@@ -40,7 +39,7 @@ export default function AllPosts() {
       setPosts((prev) => prev.filter((post) => post._id !== postToDelete._id));
       setPostToDelete(null);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Failed to delete post');
     } finally {
       setIsDeleting(false);
     }
@@ -49,12 +48,11 @@ export default function AllPosts() {
   const handleOpenEdit = (post) => {
     setPostToEdit(post);
     setEditFormData({
-      title: post.title || '',
+      title: post.title || post.name || '',
       category: post.category || '',
     });
   };
 
-  
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     if (!postToEdit) return;
@@ -71,22 +69,26 @@ export default function AllPosts() {
       );
       setPostToEdit(null);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Failed to update post');
     } finally {
       setIsUpdating(false);
     }
   };
 
-  const filteredPosts = posts.filter((post) =>
-    post.title?.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredPosts = posts
+    .filter((post) => (post.title || post.name)?.toLowerCase().includes(search.toLowerCase()))
+    .map((post) => ({
+      ...post,
+      name: post.title || post.name, // Normalizes title to name for AdminTable
+      description: post.category ? `Category: ${post.category}` : post.description,
+    }));
 
   return (
     <div className="w-full p-6 space-y-6">
-        <div className='text-center'>
-          <h2 className="text-2xl font-serif font-bold text-[#0a1128]">Blog Posts</h2>
-          <p className="text-slate-500 text-sm">View and manage all published articles</p>
-        </div>
+      <div className="text-center">
+        <h2 className="text-lg sm:text-2xl font-serif font-bold text-[#0a1128]">Blog Posts</h2>
+        <p className="text-slate-500 text-sm">View and manage all published articles</p>
+      </div>
 
       {error && (
         <div className="flex items-center justify-between text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-3">
@@ -98,71 +100,28 @@ export default function AllPosts() {
       )}
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-          <div className="relative w-72">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search articles..."
-              className="w-full pl-9 pr-4 py-1.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#034078]"
-            />
-          </div>
-        </div>
+        <SearchInput
+          items={filteredPosts}
+          onChange={(e) => setSearch(e.target.value)}
+          value={search}
+          title="blogs"
+        />
 
-        {loading ? (
-          <p className="p-6 text-sm text-slate-500">Loading posts...</p>
-        ) : filteredPosts.length === 0 ? (
-          <p className="p-6 text-sm text-slate-500">No posts found.</p>
-        ) : (
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-100">
-                <th className="py-3 px-6 font-semibold">Title</th>
-                <th className="py-3 px-6 font-semibold">Category</th>
-                <th className="py-3 px-6 font-semibold">Status</th>
-                <th className="py-3 px-6 font-semibold text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-sm">
-              {filteredPosts.map((post) => (
-                <tr key={post._id} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="py-4 px-6 font-medium text-slate-900">{post.title}</td>
-                  <td className="py-4 px-6 text-slate-500">{post.category}</td>
-                  <td className="py-4 px-6">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
-                      <CheckCircle size={12} /> Published
-                    </span>
-                  </td>
-                  <td className="py-4 px-6 text-right">
-                    <div className="flex items-center justify-end gap-2 text-slate-400">
-                      <button
-                        onClick={() => handleOpenEdit(post)}
-                        className="hover:text-[#034078] p-1.5 rounded-md hover:bg-slate-100 transition-colors"
-                        title="Edit post"
-                      >
-                        <Edit size={16} />
-                      </button>
-                      <button
-                        onClick={() => setPostToDelete(post)}
-                        className="hover:text-red-500 p-1.5 rounded-md hover:bg-red-50 transition-colors"
-                        title="Delete post"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <AdminTable
+          items={filteredPosts}
+          loading={loading}
+          deletingId={isDeleting ? postToDelete?._id : null}
+          onEdit={handleOpenEdit}
+          onDelete={(id) => setPostToDelete(posts.find((p) => p._id === id))}
+          secondColumnHeader="Category"
+          secondColumnKey="category"
+        />
       </div>
 
+      {/* Delete Confirmation Modal */}
       {postToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-red-100 text-red-600 rounded-full shrink-0">
                 <AlertTriangle size={24} />
@@ -170,7 +129,11 @@ export default function AllPosts() {
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-slate-900">Delete Post</h3>
                 <p className="text-sm text-slate-500 mt-1">
-                  Are you sure you want to delete <span className="font-semibold text-slate-800">"{postToDelete.title}"</span>? This action cannot be undone.
+                  Are you sure you want to delete{' '}
+                  <span className="font-semibold text-slate-800">
+                    "{postToDelete.title || postToDelete.name}"
+                  </span>
+                  ? This action cannot be undone.
                 </p>
               </div>
             </div>
@@ -197,10 +160,10 @@ export default function AllPosts() {
         </div>
       )}
 
-    
+      {/* Edit Modal */}
       {postToEdit && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <h3 className="text-lg font-bold text-[#0a1128]">Edit Article</h3>
               <button
