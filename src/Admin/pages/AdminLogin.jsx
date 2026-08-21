@@ -4,6 +4,7 @@ import logo from '../../assets/images/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { loginUser } from '../../api/Auth';
+import { Loader2 } from 'lucide-react';
 
 const AdminLogin = () => {
   const navigate = useNavigate()
@@ -117,7 +118,11 @@ const AdminLogin = () => {
             className="w-full mt-2 bg-[#034078] hover:bg-[#034078]/80
              text-white font-medium py-3.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg group"
           >
-            {isPending? 'logining in' : 'login  to Admin Portal'}
+            {isPending?(
+              <span className="flex items-center gap-2">
+                  <Loader2 size={14} className="animate-spin" /> logining in
+                 </span>
+            )  : ('Admin Portal')}
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </form>
