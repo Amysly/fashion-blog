@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react';
 import TextInput from '../components/TextInput';
 import AdminTable from '../components/AdminTable';
 import SearchInput from '../components/SearchInput';
-import Header from '../components/Header';
+import Header from '../../components/Header'
 
 const AdminTrendingOutfit = () => {
   const [trending, setTrending] = useState([]);
@@ -126,6 +126,7 @@ const AdminTrendingOutfit = () => {
     }
   };
 
+  
   const filteredtrendingOutfit = trending.filter((p) =>
     p?.name?.toLowerCase().includes(search.toLowerCase()) ||
     p?.description?.toLowerCase().includes(search.toLowerCase())

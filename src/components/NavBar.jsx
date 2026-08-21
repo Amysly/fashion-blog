@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
+import { useNavigate } from 'react-router-dom';
 
 
 const NavBar = () => {
+  const navigate = useNavigate()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -48,7 +50,9 @@ const NavBar = () => {
         </nav>
 
         <div className="flex items-center gap-4">
-          <button className="hidden md:block bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-caps text-label-caps tracking-widest cursor-pointer hover:opacity-90 transition-opacity">
+          <button 
+          onClick={()=>navigate('/subscribe')}
+          className="hidden md:block bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-caps text-label-caps tracking-widest cursor-pointer hover:opacity-90 transition-opacity">
             SUBSCRIBE
           </button>
 

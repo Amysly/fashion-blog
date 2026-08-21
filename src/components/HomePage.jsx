@@ -11,10 +11,10 @@ const HomePage = () => {
   return (
     <>
     <Herosection/>
-    <TrendingOutfit/>
+    <TrendingOutfit limit={4}/>
     <NewsLetter/>
     <LatestArticles/>
-    <Shop/>
+    <Shop limit={4}/>
     <InspiredLooks/>
     </>
   )

@@ -4,7 +4,8 @@ import { getProducts, createProduct, updateProduct, deleteProduct } from '../../
 import TextInput from '../components/TextInput';
 import AdminTable from '../components/AdminTable';
 import SearchInput from '../components/SearchInput';
-import Header from '../components/Header';
+import Header from '../../components/Header'
+
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -158,7 +159,7 @@ const AdminProducts = () => {
         )}
 
          <SearchInput
-        itmes={filteredProducts}
+        items={filteredProducts}
           onChange={(e) => setSearch(e.target.value)}
          value={search}
          title='products'

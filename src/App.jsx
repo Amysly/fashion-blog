@@ -30,6 +30,7 @@ import AdminTrendingOutfit from "./Admin/pages/AdminTrendingOutfit";
 import ProductDetail from "./Pages/ProductDetail";
 import TrendingOutfitDetail from "./Pages/TrendingOutfitDetail";
 import LatestArticles from "./Pages/LatestArticles";
+import NewsLetter from "./Pages/NewsLetter";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,6 +41,7 @@ const router = createBrowserRouter(
          <Route path="/about" element={<About />} />
           <Route path="/contact-us" element={<Contact />} />
            <Route path="/blog" element={<LatestArticles />} />
+          <Route path="/subscribe" element={<NewsLetter />} />
         <Route path="/trending-outfit" element={<TrendingOutfit />} />
         <Route path="/blog/:slug" element={<PostDetail />} />
         <Route path="/product/:slug" element={<ProductDetail />} />

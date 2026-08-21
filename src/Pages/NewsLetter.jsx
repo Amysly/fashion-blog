@@ -53,7 +53,8 @@ const NewsLetter = () => {
             <button
               type="submit"
               disabled={status.loading}
-              className="font-label-caps text-label-caps bg-primary text-on-primary px-8 py-3 rounded-lg tracking-widest hover:opacity-90 transition-opacity whitespace-nowrap disabled:opacity-60"
+              className="font-label-caps text-label-caps bg-primary text-on-primary px-8 py-4 sm:py-3
+              rounded-lg tracking-widest hover:opacity-90 transition-opacity whitespace-nowrap disabled:opacity-60"
             >
               {status.loading ?
               (<span className="flex items-center gap-2">

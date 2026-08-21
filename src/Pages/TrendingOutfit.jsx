@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getTrendingOutfit } from '../api/trendingOutfit';
 import Spinner from '../components/Spinner';
 
-const TrendingOutfit = () => {
+const TrendingOutfit = ({limit}) => {
   const [outfits, setOutfits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -35,6 +35,9 @@ const TrendingOutfit = () => {
       .replace(/^-+|-+$/g, '');
   };
 
+  const displayedTrendingOutfit = limit ? outfits.slice(0, limit) : outfits;
+
+
   return (
     <div>
       <section className="max-w-[1200px] mx-auto px-margin-desktop py-section-gap">
@@ -47,12 +50,14 @@ const TrendingOutfit = () => {
               Trending Outfits
             </h3>
           </div>
-          <Link
+          {limit && (
+            <Link
             className="text-on-surface-variant border-b border-outline-variant pb-1 font-label-caps text-[11px] tracking-widest hover:text-primary transition-colors"
             to="/trending-outfit"
           >
             VIEW ALL TRENDS
           </Link>
+          )}
         </div>
 
         {loading && (
@@ -72,7 +77,7 @@ const TrendingOutfit = () => {
           </div>
         )}
 
-        {!loading && !error && outfits.length === 0 && (
+        {!loading && !error && displayedTrendingOutfit.length === 0 && (
           <div className="text-center py-12">
             <p className="text-on-surface-variant font-label-caps tracking-widest">
               NO TRENDING OUTFITS AVAILABLE AT THIS TIME.
@@ -80,9 +85,9 @@ const TrendingOutfit = () => {
           </div>
         )}
 
-        {!loading && !error && outfits.length > 0 && (
+        {!loading && !error && displayedTrendingOutfit.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter">
-            {outfits.map((item) => {
+            {displayedTrendingOutfit.map((item) => {
               const id = item._id || item.id;
               const title = item.title || item.name;
               const imageSrc =
@@ -112,6 +117,7 @@ const TrendingOutfit = () => {
             })}
           </div>
         )}
+
       </section>
     </div>
   );
