@@ -30,6 +30,7 @@ import AdminTrendingOutfit from "./Admin/pages/AdminTrendingOutfit";
 import ProductDetail from "./Pages/ProductDetail";
 import TrendingOutfitDetail from "./Pages/TrendingOutfitDetail";
 import LatestArticles from "./Pages/LatestArticles";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>

@@ -3,12 +3,12 @@ import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 import { Outlet,useLocation } from 'react-router-dom'
 import { Toaster } from "react-hot-toast";
+import ScrollToTop from '../components/ScrollToTop';
 
 
 const pageTitles = {
   "/": "home",
   "/about": "about",
-  "/outfit": "outfit",
   "/shop": "shop",
   "/trending-outfit": "Trending outfit",
   "/contact-us": "contact"
@@ -23,6 +23,7 @@ const MainLayout = () => {
   }, [location.pathname]);
   return (
     <div>
+     <ScrollToTop />
     <NavBar/>
     <Toaster/>
     <Outlet/>

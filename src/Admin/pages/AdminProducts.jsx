@@ -4,6 +4,7 @@ import { getProducts, createProduct, updateProduct, deleteProduct } from '../../
 import TextInput from '../components/TextInput';
 import AdminTable from '../components/AdminTable';
 import SearchInput from '../components/SearchInput';
+import Header from '../components/Header';
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -143,25 +144,12 @@ const AdminProducts = () => {
     <div className="min-h-screen bg-slate-50 text-slate-800 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="font-serif text-xl sm:text-3xl font-bold tracking-wider text-[#0a1128]">
-              Product Catalog
-            </h1>
-            <p className="text-slate-500 text-sm mt-1">
-              Manage product listings, update prices, and upload product images.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={openCreateModal}
-            className="bg-[#034078] hover:bg-[#001f54] text-white font-medium px-5 py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm text-sm"
-          >
-            <Plus size={18} />
-            <span>Add New Product</span>
-          </button>
-        </div>
+          <Header
+          title='Product Catalog'
+          description='Manage product listings, update prices, and upload product images.'
+          item='Add New Product'
+          onClick={openCreateModal}
+       />
 
         {error && (
           <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-2">
