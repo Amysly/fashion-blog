@@ -89,7 +89,7 @@ const Shop = ({ limit }) => {
                     {title}
                   </p>
                   <p className="text-secondary mt-1 font-body-md">
-                    {price}
+                    ₦{price}
                   </p>
                 </div>
               );

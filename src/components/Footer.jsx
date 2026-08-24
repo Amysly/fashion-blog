@@ -4,6 +4,7 @@ import { FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { IoLogoFacebook } from "react-icons/io";
 import { createEmailSub } from '../api/subscribe';
+import { FaPinterest } from 'react-icons/fa';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -14,12 +15,11 @@ const Footer = () => {
     { linkName: 'Blogs', path: '/blog' },
     { linkName: 'Shop', path: '/shop' },
     { linkName: 'Trending Outfit', path: '/trending-outfit' },
-    { linkName: 'About', path: '/about' },
   ];
 
   const resourceLinks = [
-    { name: 'Privacy Policy', path: '/privacy' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'Contact', path: '/contact-us' },
+     {name: 'About', path: '/about' },
   ];
 
   const handleSubscribe = async (e) => {
@@ -52,33 +52,13 @@ const Footer = () => {
           </p>
           <div className="flex gap-4">
             <a
-              href="https://instagram.com"
+              href="https://pin.it/K9uDtmmGn"
               target="_blank"
               rel="noopener noreferrer"
               className="text-secondary cursor-pointer hover:text-primary transition-colors"
               aria-label="Instagram"
             >
-              <FaInstagram className="text-2xl sm:text-xl" />
-            </a>
-
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-secondary cursor-pointer hover:text-primary transition-colors"
-              aria-label="Twitter / X"
-            >
-              <FaXTwitter className="text-2xl sm:text-xl" />
-            </a>
-
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-secondary cursor-pointer hover:text-primary transition-colors"
-              aria-label="Facebook"
-            >
-              <IoLogoFacebook className="text-2xl sm:text-xl" />
+              <FaPinterest className="text-2xl sm:text-xl" />
             </a>
           </div>
         </div>

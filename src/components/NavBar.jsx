@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
-import { useNavigate } from 'react-router-dom';
-
 
 const NavBar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -19,14 +17,13 @@ const NavBar = () => {
 
   return (
     <header className="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md">
-      <div className="px-4 md:px-8 flex justify-between items-center h-24">
-        
-        <div className="text-xl font-bold text-primary">
-          <Link to="/">
+      <div className="px-2 md:px-8 flex justify-between items-center h-16 sm:h-20">
+        <div className="text-xl font-bold text-primary flex items-center">
+          <Link to="/" className="flex items-center">
             <img
-              //src={}
+              src={logo}
               alt="logo-image"
-              className="h-60 w-60 object-contain"
+              className="h-32 w-auto max-w-[160px] md:h-46 md:max-w-none object-contain"
             />
           </Link>
         </div>
@@ -51,8 +48,9 @@ const NavBar = () => {
 
         <div className="flex items-center gap-4">
           <button 
-          onClick={()=>navigate('/subscribe')}
-          className="hidden md:block bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-caps text-label-caps tracking-widest cursor-pointer hover:opacity-90 transition-opacity">
+            onClick={() => navigate('/subscribe')}
+            className="hidden md:block bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-caps text-label-caps tracking-widest cursor-pointer hover:opacity-90 transition-opacity"
+          >
             SUBSCRIBE
           </button>
 
@@ -108,7 +106,7 @@ const NavBar = () => {
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `block font-label-caps text-label-caps tracking-widest  border-b border-secondary-fixed-dim py-2 transition-colors ${
+                `block font-label-caps text-label-caps tracking-widest border-b border-secondary-fixed-dim py-2 transition-colors ${
                   isActive
                     ? 'text-primary font-bold'
                     : 'text-on-surface-variant hover:text-primary'

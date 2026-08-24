@@ -6,6 +6,20 @@ const api = axios.create({
   withCredentials: true,
 });
 
+const getApiError = (error, fallbackMessage) => {
+  const responseData = error.response?.data;
+  const message = typeof responseData === 'string'
+    ? responseData
+    : responseData?.message || error.message || fallbackMessage;
+
+  console.error('Contact message API request failed', {
+    status: error.response?.status,
+    response: responseData,
+  });
+
+  return new Error(message);
+};
+
 export const messageContact = async (messageData) => {
   try {
     const response = await api.post('/', messageData);

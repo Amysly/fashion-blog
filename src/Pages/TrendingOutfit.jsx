@@ -40,7 +40,7 @@ const TrendingOutfit = ({limit}) => {
 
   return (
     <div>
-      <section className="max-w-[1200px] mx-auto px-margin-desktop py-section-gap">
+      <section className="max-w-[1000px] mx-auto px-margin-desktop py-section-gap">
         <div className="flex justify-between items-end mb-12">
           <div>
             <span className="text-secondary font-label-caps text-label-caps tracking-[0.2em]">
