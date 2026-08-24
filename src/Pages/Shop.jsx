@@ -26,36 +26,36 @@ const Shop = ({ limit }) => {
   };
 
   const displayedProducts = limit ? products.slice(0, limit) : products;
+  if (loading) {
+      return (
+        <div className="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+          <Spinner label="Loading Product......" />
+        </div>
+      );
+    }
+  
+    if (error) {
+      return (
+        <div className="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-section-gap text-center">
+          <p className="text-red-500 font-label-caps">{error}</p>
+        </div>
+      );
+    }
 
   return (
     <div>
-      <section className="max-w-[1200px] mx-auto px-margin-desktop py-section-gap border-t border-outline-variant/30">
+      <section className="max-w-[1200px] mx-auto  px-margin-mobile md:px-margin-desktop py-section-gap border-t border-outline-variant/30">
         <div className="text-center mb-16">
-          <span className="text-secondary font-label-caps text-label-caps tracking-[0.2em]">
+          <span className="text-secondary font-label-caps text-label-small md:text-label-caps  tracking-[0.2em]">
             ESSENTIAL PIECES
           </span>
-          <h3 className="font-headline-md text-headline-md mt-4">
+          <h3 className="font-headline-md text-headline-sm md:text-headline-md mt-4">
             Shop the Look
           </h3>
         </div>
 
-        {loading && (
-          <Spinner label='Loading Product...'/>
-        )}
-
-        {error && !loading && (
-          <div className="text-center py-12">
-            <p className="text-red-500 font-label-caps mb-4">{error}</p>
-            <button
-              onClick={loadProducts}
-              className="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-caps text-xs tracking-widest hover:opacity-90 transition-opacity"
-            >
-              RETRY
-            </button>
-          </div>
-        )}
-
-        {!loading && !error && displayedProducts.length === 0 && (
+       
+        { displayedProducts.length === 0 && (
           <div className="text-center py-12">
             <p className="text-on-surface-variant font-label-caps">
               NO PRODUCTS AVAILABLE AT THIS TIME.
@@ -63,7 +63,7 @@ const Shop = ({ limit }) => {
           </div>
         )}
 
-        {!loading && !error && displayedProducts.length > 0 && (
+        {displayedProducts.length > 0 && (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-gutter">
             {displayedProducts.map((product) => {
               const slug = product.slug;
@@ -85,10 +85,10 @@ const Shop = ({ limit }) => {
                       SHOP
                     </button>
                   </div>
-                  <p className="font-label-caps text-label-caps tracking-widest text-on-surface uppercase">
+                  <p className="font-label-caps text-label-small md:text-label-caps  tracking-widest text-on-surface">
                     {title}
                   </p>
-                  <p className="text-secondary mt-1 font-body-md">
+                  <p className="text-secondary mt-1 font-body-sm md:font-body-md">
                     ₦{price}
                   </p>
                 </div>

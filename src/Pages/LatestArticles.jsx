@@ -34,27 +34,31 @@ const LatestArticles = () => {
   const latestPosts = posts.slice(0, 2);
   const popularPosts = posts.slice(2);
 
+  if (loading) {
+    return (
+      <div className="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+        <Spinner label="Loading Articles..." />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-section-gap text-center">
+        <p className="text-red-500 font-label-caps">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <section className="max-w-[1200px] mx-auto px-margin-desktop py-section-gap grid grid-cols-1 lg:grid-cols-3 gap-16">
-        
-        {/* Left Column: Latest Articles */}
+      <section className="max-w-[1200px] mx-auto  px-margin-mobile md:px-margin-desktop py-section-gap grid grid-cols-1 lg:grid-cols-3 gap-16">
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-10">
             <h3 className="font-headline-md text-headline-md">Latest Articles</h3>
           </div>
 
-          {loading && (
-            <Spinner label='Loading Articles...'/>
-          )}
-
-          {error && !loading && (
-            <div className="py-12 text-center">
-              <p className="text-red-500 font-label-caps">{error}</p>
-            </div>
-          )}
-
-          {!loading && !error && posts.length === 0 && (
+          {posts.length === 0 && (
             <div className="py-12 text-center">
               <p className="text-on-surface-variant font-label-caps">
                 NO ARTICLES FOUND.
@@ -62,7 +66,7 @@ const LatestArticles = () => {
             </div>
           )}
 
-          {!loading && !error && latestPosts.length > 0 && (
+          {latestPosts.length > 0 && (
             <div className="space-y-12">
               {latestPosts.map((post) => {
                 const id = post._id || post.id;
@@ -80,11 +84,11 @@ const LatestArticles = () => {
                       <span className="text-secondary font-label-caps text-[10px] tracking-widest mb-2 uppercase">
                         {post.category || 'Beauty & Lifestyle'} • {formatDate(post.createdAt)}
                       </span>
-                      
+
                       <h4 className="font-headline-sm text-headline-sm mb-4 leading-snug group-hover:text-primary transition-colors">
                         {post.title}
                       </h4>
-                      
+
                       <p className="text-on-surface-variant font-body-md mb-6 line-clamp-2">
                         {post.description}
                       </p>
@@ -111,17 +115,13 @@ const LatestArticles = () => {
             Most Popular
           </h3>
 
-          {loading && (
-             <Spinner label='Loading...'/>
-          )}
-
-          {!loading && popularPosts.length === 0 && (
+          {popularPosts.length === 0 && (
             <p className="text-on-surface-variant font-label-caps text-xs">
               NO MORE ARTICLES.
             </p>
           )}
 
-          {!loading && popularPosts.length > 0 && (
+          {popularPosts.length > 0 && (
             <ul className="space-y-8">
               {popularPosts.map((post, index) => {
                 const id = post.slug;

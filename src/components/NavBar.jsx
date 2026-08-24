@@ -17,16 +17,16 @@ const NavBar = () => {
 
   return (
     <header className="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md">
-      <div className="px-2 md:px-8 flex justify-between items-center h-16 sm:h-20">
-        <div className="text-xl font-bold text-primary flex items-center">
-          <Link to="/" className="flex items-center">
-            <img
-              src={logo}
-              alt="logo-image"
-              className="h-32 w-auto max-w-[160px] md:h-46 md:max-w-none object-contain"
-            />
-          </Link>
-        </div>
+  <div className="px-2 md:px-8 flex justify-between items-center h-16 sm:h-20">
+    <div className="text-xl font-bold text-primary flex items-center relative">
+      <Link to="/" className="relative flex items-center w-36 sm:w-48 h-12">
+        <img
+          src={logo}
+          alt="logo-image"
+          className="absolute top-1/2 -translate-y-1/2 left-0 h-28 sm:h-40 w-auto max-w-none object-contain z-10"
+        />
+      </Link>
+    </div>
 
         <nav className="hidden md:flex items-center space-x-8">
           {navLinks.map((item) => (

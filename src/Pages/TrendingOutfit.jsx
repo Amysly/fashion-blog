@@ -37,22 +37,38 @@ const TrendingOutfit = ({limit}) => {
 
   const displayedTrendingOutfit = limit ? outfits.slice(0, limit) : outfits;
 
+  if (loading) {
+    return (
+      <div className="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+        <Spinner label="Loading Trending outfits..." />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-section-gap text-center">
+        <p className="text-red-500 font-label-caps">{error}</p>
+      </div>
+    );
+  }
+
 
   return (
     <div>
-      <section className="max-w-[1000px] mx-auto px-margin-desktop py-section-gap">
+      <section className="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-section-gap w-full">
         <div className="flex justify-between items-end mb-12">
           <div>
-            <span className="text-secondary font-label-caps text-label-caps tracking-[0.2em]">
+            <span className="text-secondary font-label-caps text-label-small md:text-label-caps tracking-[0.2em]">
               CURATED STYLE
             </span>
-            <h3 className="font-headline-md text-headline-md mt-2">
+            <h3 className="font-headline-md text-headline-sm md:text-headline-md mt-2">
               Trending Outfits
             </h3>
           </div>
           {limit && (
             <Link
-            className="text-on-surface-variant border-b border-outline-variant pb-1 font-label-caps text-[11px] tracking-widest hover:text-primary transition-colors"
+            className="text-on-surface-variant border-b border-outline-variant pb-1 font-label-caps  text-[9px] md:text-[11px] tracking-widest hover:text-primary transition-colors"
             to="/trending-outfit"
           >
             VIEW ALL TRENDS
@@ -60,24 +76,7 @@ const TrendingOutfit = ({limit}) => {
           )}
         </div>
 
-        {loading && (
-          <Spinner lable='Loading Trending Outfit'/>
-        )}
-
-       
-        {error && !loading && (
-          <div className="text-center py-12">
-            <p className="text-red-500 font-label-caps mb-4">{error}</p>
-            <button
-              onClick={loadOutfits}
-              className="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-caps text-xs tracking-widest hover:opacity-90 transition-opacity"
-            >
-              RETRY
-            </button>
-          </div>
-        )}
-
-        {!loading && !error && displayedTrendingOutfit.length === 0 && (
+        {displayedTrendingOutfit.length === 0 && (
           <div className="text-center py-12">
             <p className="text-on-surface-variant font-label-caps tracking-widest">
               NO TRENDING OUTFITS AVAILABLE AT THIS TIME.
@@ -85,7 +84,7 @@ const TrendingOutfit = ({limit}) => {
           </div>
         )}
 
-        {!loading && !error && displayedTrendingOutfit.length > 0 && (
+        {displayedTrendingOutfit.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter">
             {displayedTrendingOutfit.map((item) => {
               const id = item._id || item.id;

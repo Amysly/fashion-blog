@@ -17,7 +17,7 @@ style={{ backgroundImage: `url(${bgImage})`,
 </div>
 <div className="absolute inset-0 hero-gradient"></div>
 <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 text-center">
-<h2 className="text-white font-display-lg text-display-lg   max-w-2xl mb-8 leading-tight">Helping women dress beautifully and confidently.</h2>
+<h2 className="text-white font-display-lg  text-display-lg-mobile md:text-display-lg   max-w-2xl mb-8 leading-tight">Helping women dress beautifully and confidently.</h2>
 <button 
 onClick={()=>navigate('/shop')}
 className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-10 py-4 rounded-lg font-label-caps

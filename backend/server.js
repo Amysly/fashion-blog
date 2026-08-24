@@ -15,6 +15,7 @@ import productRoute from './routes/productRoute.js'
 import emailSub from './routes/emailSubRoute.js'
 import trendingOutfitRoute from './routes/trendingOutfitRoute.js'
 import contactMessageRoute from './routes/contactMessageRoute.js'
+import inspiredLookRoute from './routes/inspiredLookRoute.js'
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -35,6 +36,7 @@ app.use('/api/products/', productRoute);
 app.use('/api/subscribe', emailSub); 
 app.use('/api/trending-outfit/', trendingOutfitRoute ); 
 app.use('/api/contact', contactMessageRoute); 
+app.use('/api/inspiredlooks/', inspiredLookRoute); 
 
 app.use(errorHandler);
 

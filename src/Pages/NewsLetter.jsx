@@ -26,8 +26,8 @@ const NewsLetter = () => {
 
   return (
     <section className="w-full py-section-gap bg-surface-container-low">
-      <div className="max-w-[800px] mx-auto px-margin-desktop text-center">
-        <span className="text-secondary font-label-caps text-label-caps tracking-[0.2em]">
+      <div className="max-w-[800px] mx-auto  px-margin-mobile md:px-margin-desktop text-center">
+        <span className="text-secondary font-label-caps text-label-small md:text-label-caps tracking-[0.2em]">
           JOIN OUR WORLD
         </span>
         <h3 className="font-headline-md text-headline-md mt-4 mb-8 italic">

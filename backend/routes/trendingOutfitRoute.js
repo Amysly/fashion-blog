@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'
 import trendingOutfitController from '../controllers/trendingOutfitController.js';
 import protect from '../middleware/authMiddleWare.js';
 import upload from '../middleware/upload.js';
