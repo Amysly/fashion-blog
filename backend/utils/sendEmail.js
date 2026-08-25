@@ -6,7 +6,7 @@ const sendWelcomeEmail = async (options) => {
   const unsubscribeUrl = `${process.env.BACKEND_URL}/api/subscribe/unsubscribe?token=${options.unsubscribeToken}`;
 
   const { data, error } = await resend.emails.send({
-    from: "The Style Parlour <styleparlour.com>",
+    from: "The Style Parlour <styleparlour.co>",
     to: options.email,
     subject: options.subject,
     html: `

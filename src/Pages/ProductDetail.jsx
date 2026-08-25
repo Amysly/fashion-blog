@@ -73,7 +73,7 @@ const ProductDetail = () => {
             </h1>
 
             <p className="text-2xl font-body-md text-primary font-semibold">
-              {formattedPrice}
+               ₦{formattedPrice}
             </p>
 
             <p className="text-on-surface-variant text-sm leading-relaxed font-body-md">
