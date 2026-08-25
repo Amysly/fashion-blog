@@ -50,6 +50,7 @@ const getEmailSubByAdmin = asyncHandler(async (req, res) => {
 
 
 const submitContactForm = asyncHandler(async (req, res) => {
+  //console.log('Contact form hit:', req.body);
   const { name, email, message, subject } = req.body || {};
 
   if (!name || !email || !message || !subject) {

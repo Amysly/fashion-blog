@@ -121,7 +121,7 @@ const NavBar = () => {
           <div className="pt-2">
             <button 
              onClick={() => navigate('/subscribe')}
-              onClick={() => setIsMobileMenuOpen(false)}
+              //onClick={() => setIsMobileMenuOpen(false)}
               className="w-full bg-primary text-on-primary px-6 py-3.5 rounded-lg font-label-caps text-label-caps tracking-widest cursor-pointer hover:opacity-90 transition-opacity"
             >
               SUBSCRIBE
