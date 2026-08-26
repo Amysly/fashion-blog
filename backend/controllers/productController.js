@@ -34,7 +34,7 @@ const createProduct = asyncHandler(async (req, res) => {
     throw new Error("You don't have access to create a product");
   }
 
-  const { name, price, description } = req.body || {}
+  const { name, price, description,  externalLink } = req.body || {}
 
   if (!name || !price || !description) {
     res.status(400);
@@ -53,7 +53,8 @@ const createProduct = asyncHandler(async (req, res) => {
     price,
     description,
     image: result.secure_url,
-    user: req.user._id
+    user: req.user._id,
+     externalLink: externalLink || ''
   });
 
   res.status(201).json(product);
@@ -75,10 +76,11 @@ const updateProduct = asyncHandler(async (req, res) => {
     throw new Error('Product not found');
   }
 
-  const { name, price } = req.body;
+  const { name, price, externalLink } = req.body;
 
   if (name) product.name = name;
   if (price) product.price = price;
+    if (externalLink ) product.externalLink  = externalLink ;
 
   if (req.file) {
     const result = await uploadToCloudinary(req.file.buffer);

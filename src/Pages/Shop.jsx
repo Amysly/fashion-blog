@@ -70,6 +70,7 @@ const Shop = ({ limit }) => {
               const title = product.name;
               const price = typeof product.price === 'number' ? `${product.price.toLocaleString()}` : product.price;
               const imageSrc = product.image || product.images;
+               const hasExternalLink = Boolean(product.externalLink);
 
               return (
                 <div key={slug} className="text-center group">
@@ -81,7 +82,11 @@ const Shop = ({ limit }) => {
                         alt={title}
                       />
                     </Link>
-                    <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white text-primary font-label-caps text-[10px] px-6 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity tracking-widest delicate-shadow">
+                      <button 
+                       href={hasExternalLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white text-primary font-label-caps text-[10px] px-6 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity tracking-widest delicate-shadow">
                       SHOP
                     </button>
                   </div>

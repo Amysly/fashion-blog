@@ -15,7 +15,7 @@ const AdminProducts = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [formData, setFormData] = useState({ name: '', price: '', description: '' });
+  const [formData, setFormData] = useState({ name: '', price: '', description: '',externalLink: '' });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [formError, setFormError] = useState('');
@@ -102,6 +102,7 @@ const AdminProducts = () => {
     payload.append('name', formData.name.trim());
     payload.append('price', formData.price);
     payload.append('description', formData.description.trim());
+    payload.append('externalLink', formData.externalLink.trim());
     if (imageFile) payload.append('image', imageFile);
 
     setIsSaving(true);
@@ -215,6 +216,14 @@ const AdminProducts = () => {
                   placeholder="25000"
                 />
                 <TextInput
+                label="Product Link"
+                   type="url"
+                    name="externalLink"
+                    value={formData.externalLink}
+                    onChange={handleChange}
+                    placeholder="https://etsy.com/listing/..."
+                />
+                <TextInput
                   label="Description"
                   name="description"
                   rows={3}
@@ -222,6 +231,7 @@ const AdminProducts = () => {
                   onChange={handleChange}
                   placeholder="Provide details about this outfit..."
                 />
+               
                 <TextInput
                   label="Product Image"
                   imagePreview={imagePreview}

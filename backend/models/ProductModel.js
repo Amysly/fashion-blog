@@ -34,7 +34,13 @@ const productSchema = new mongoose.Schema(
     type: String, 
     unique: true, 
     lowercase: true 
-  }
+  },
+      externalLink: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+
   },
   {
     timestamps: true,
