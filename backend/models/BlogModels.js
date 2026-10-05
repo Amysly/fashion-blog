@@ -25,6 +25,25 @@ const blogSchema = new mongoose.Schema(
     image: {
       type: String,
     },
+    sections: [
+      {
+        image: {
+          type: String,
+          required: true,
+        },
+
+        heading: {
+          type: String,
+          required: true,
+        },
+
+        description: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+
     category: {
       type: String,
       enum: [

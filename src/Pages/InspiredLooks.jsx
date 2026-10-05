@@ -36,6 +36,15 @@ const InspiredLooks = () => {
       </div>
     );
   }
+   if (looks.length === 0) {
+    return (
+      <div className="py-12 text-center">
+            <p className="text-on-surface-variant font-label-caps">
+              NO INSPIRED IMAGE FOUND.
+            </p>
+          </div>
+    );
+  }
 
   return (
     <div>
@@ -62,15 +71,7 @@ const InspiredLooks = () => {
         </div>
        
 
-        { looks.length === 0 && (
-          <div className="py-12 text-center">
-            <p className="text-on-surface-variant font-label-caps">
-              NO IMAGE FOUND.
-            </p>
-          </div>
-        )}
-
-        {looks.length > 0 && (
+        
           <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
             {looks.slice(0, 6).map((look) => (
               <div
@@ -86,7 +87,6 @@ const InspiredLooks = () => {
               </div>
             ))}
           </div>
-        )}
       </section>
     </div>
   );

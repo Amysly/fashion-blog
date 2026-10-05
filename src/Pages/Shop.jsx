@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getProducts } from '../api/Product';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
+import { HiOutlineShoppingBag } from "react-icons/hi";
 
 const Shop = ({ limit }) => {
   const [products, setProducts] = useState([]);
@@ -36,8 +37,20 @@ const Shop = ({ limit }) => {
   
     if (error) {
       return (
+           <div className="text-center py-12">
+            <p className="text-on-surface-variant font-label-caps">
+              NO PRODUCTS AVAILABLE AT THIS TIME.
+            </p>
+          </div>
+      );
+    }
+
+    if (displayedProducts.length === 0  ) {
+      return (
         <div className="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-section-gap text-center">
-          <p className="text-red-500 font-label-caps">{error}</p>
+          <p className="text-on-surface-variant font-label-caps">
+              NO PRODUCTS AVAILABLE AT THIS TIME.
+            </p>
         </div>
       );
     }
@@ -55,26 +68,19 @@ const Shop = ({ limit }) => {
         </div>
 
        
-        { displayedProducts.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-on-surface-variant font-label-caps">
-              NO PRODUCTS AVAILABLE AT THIS TIME.
-            </p>
-          </div>
-        )}
 
-        {displayedProducts.length > 0 && (
+       
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-gutter">
             {displayedProducts.map((product) => {
               const slug = product.slug;
               const title = product.name;
               const price = typeof product.price === 'number' ? `${product.price.toLocaleString()}` : product.price;
               const imageSrc = product.image || product.images;
-               const hasExternalLink = Boolean(product.externalLink);
+               const hasExternalLink = product.externalLink 
 
               return (
                 <div key={slug} className="text-center group">
-                  <div className="aspect-[3/4] bg-surface-variant/20 rounded-xl overflow-hidden mb-6 relative">
+                  <div className="aspect-[3/4] bg-surface-variant/20 rounded-xl overflow-hidden mb-6">
                     <Link to={`/product/${slug}`}>
                       <img
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -82,13 +88,6 @@ const Shop = ({ limit }) => {
                         alt={title}
                       />
                     </Link>
-                      <button 
-                       href={hasExternalLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white text-primary font-label-caps text-[10px] px-6 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity tracking-widest delicate-shadow">
-                      SHOP
-                    </button>
                   </div>
                   <p className="font-label-caps text-label-small md:text-label-caps  tracking-widest text-on-surface">
                     {title}
@@ -96,11 +95,20 @@ const Shop = ({ limit }) => {
                   <p className="text-secondary mt-1 font-body-sm md:font-body-md">
                     ₦{price}
                   </p>
+                 
+                  <a
+                  href={hasExternalLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 flex w-full items-center justify-center gap-1 rounded-md bg-primary px-6 py-2 text-[10px] font-label-caps tracking-widest text-on-primary delicate-shadow"
+                >
+                  SHOP <HiOutlineShoppingBag className="text-[14px]" />
+                </a>
                 </div>
               );
             })}
           </div>
-        )}
+      
 
         {limit && products.length > limit && (
           <div className="text-center mt-8">

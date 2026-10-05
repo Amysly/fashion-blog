@@ -10,6 +10,7 @@ import {
   User,
   ShoppingBag,
   Menu,
+  LayoutTemplate,
   X
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -25,6 +26,7 @@ const navLinks = [
   { linkName: 'Categories', path: '/admin/categories', icon: <FolderOpen size={18} /> },
   { linkName: 'Trending Outfit', path: '/admin/trending-outfit', icon: <FolderOpen size={18} /> },
   { linkName: 'Product', path: '/admin/product', icon: <ShoppingBag size={18} /> },
+  { linkName: 'Hero Sections', path: '/admin/hero-sections', icon: <LayoutTemplate size={18} /> },
    { linkName: 'Inspired Looks', path: '/admin/looks', icon: <ShoppingBag size={18} /> },
   { linkName: 'Profile', path: '/admin/profile', icon: <User size={18} /> },
   { linkName: 'Settings', path: '/admin/settings', icon: <Settings size={18} /> },

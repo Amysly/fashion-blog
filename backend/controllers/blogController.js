@@ -31,26 +31,63 @@ const getBlog = asyncHandler(async (req, res) => {
 // @access  Private
 const createBlog = asyncHandler(async (req, res) => {
   ensureAdmin(req, res);
-  const { title, description, category } = req.body;
+
+  const { title, description, category, sections } = req.body;
 
   if (!title || !description || !category) {
     res.status(400);
     throw new Error("Please fill in all fields");
   }
 
-
-  if (!req.file) {
+  if (!req.files?.image?.[0]) {
     res.status(400);
     throw new Error("Please upload a blog image");
   }
 
-  const result = await uploadToCloudinary(req.file.buffer);
+  // Upload cover image
+  const coverResult = await uploadToCloudinary(
+    req.files.image[0].buffer
+  );
+
+  
+  let parsedSections = [];
+
+  if (sections) {
+    parsedSections =
+      typeof sections === "string"
+        ? JSON.parse(sections)
+        : sections;
+  }
+
+  // Upload section images
+  const sectionImages = req.files.sectionImages || [];
+
+  const uploadedSections = await Promise.all(
+    parsedSections.map(async (section, index) => {
+      if (!sectionImages[index]) {
+        throw new Error(
+          `Please upload an image for section ${index + 1}`
+        );
+      }
+
+      const result = await uploadToCloudinary(
+        sectionImages[index].buffer
+      );
+
+      return {
+        heading: section.heading,
+        description: section.description,
+        image: result.secure_url,
+      };
+    })
+  );
 
   const blog = await Blog.create({
     title,
     description,
     category,
-    image: result.secure_url,
+    image: coverResult.secure_url,
+    sections: uploadedSections,
     user: req.user.id,
   });
 

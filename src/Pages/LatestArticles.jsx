@@ -49,32 +49,34 @@ const LatestArticles = () => {
       </div>
     );
   }
-
-  return (
-    <div>
-      <section className="max-w-[1200px] mx-auto  px-margin-mobile md:px-margin-desktop py-section-gap grid grid-cols-1 lg:grid-cols-3 gap-16">
-        <div className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-10">
-            <h3 className="font-headline-md text-headline-md">Latest Articles</h3>
-          </div>
-
-          {posts.length === 0 && (
-            <div className="py-12 text-center">
+   if (posts.length === 0) {
+    return (
+     <div className="py-12 text-center">
               <p className="text-on-surface-variant font-label-caps">
                 NO ARTICLES FOUND.
               </p>
             </div>
-          )}
+    );
+  }
 
-          {latestPosts.length > 0 && (
+  return (
+    <div>
+      <section className="mx-auto  px-margin-mobile md:px-margin-desktop py-section-gap grid grid-cols-1 lg:grid-cols-3 gap-16">
+        <div className="lg:col-span-2">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-headline-md text-headline-md">Latest Articles</h3>
+          </div>
+
+         
             <div className="space-y-12">
               {latestPosts.map((post) => {
                 const id = post._id || post.id;
                 return (
                   <article key={id} className="flex flex-col md:flex-row gap-8 group">
-                    <div className="md:w-1/2 aspect-[4/3] overflow-hidden rounded-xl delicate-shadow bg-surface-variant/20">
+                    <div className="md:w-1/2 aspect-[4/4] overflow-hidden rounded-xl delicate-shadow bg-surface-variant/20">
                       <img
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        className="w-full h-auto object-contain group-hover:scale-105 
+                        transition-transform duration-700"
                         src={post.image}
                         alt={post.title}
                       />
@@ -107,10 +109,9 @@ const LatestArticles = () => {
                 );
               })}
             </div>
-          )}
         </div>
 
-        <div className="bg-[#f5f3f3] p-8 rounded-2xl h-fit">
+        <div className="bg-[#f5f3f3] p-8 rounded-2xl h-fit mt-1 sm:mt-10">
           <h3 className="font-headline-sm text-headline-sm mb-8 border-b border-outline-variant pb-4">
             Most Popular
           </h3>
@@ -122,7 +123,7 @@ const LatestArticles = () => {
           )}
 
           {popularPosts.length > 0 && (
-            <ul className="space-y-8">
+            <ul className="space-y-8 ">
               {popularPosts.map((post, index) => {
                 const id = post.slug;
                 const formattedIndex = String(index + 1).padStart(2, '0');

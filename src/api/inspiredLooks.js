@@ -1,7 +1,8 @@
 import axios from "axios";
 import { getStoredAccessToken } from "../lib/authToken";
+import { API_BASE_URL } from "./config";
 
-const INSPIREDLOOKS_API = `${import.meta.env.VITE_API_URL}/api/inspiredlooks/`;
+const INSPIREDLOOKS_API = `${API_BASE_URL}/api/inspiredlooks/`;
 axios.defaults.withCredentials = true;
 
 const authHeader = () => ({

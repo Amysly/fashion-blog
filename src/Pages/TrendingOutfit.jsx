@@ -53,6 +53,16 @@ const TrendingOutfit = ({limit}) => {
     );
   }
 
+  if (displayedTrendingOutfit.length === 0) {
+    return (
+      <div className="text-center py-12">
+            <p className="text-on-surface-variant font-label-caps tracking-widest">
+              NO TRENDING OUTFITS AVAILABLE AT THIS TIME.
+            </p>
+          </div>
+    );
+  }
+
 
   return (
     <div>
@@ -76,15 +86,8 @@ const TrendingOutfit = ({limit}) => {
           )}
         </div>
 
-        {displayedTrendingOutfit.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-on-surface-variant font-label-caps tracking-widest">
-              NO TRENDING OUTFITS AVAILABLE AT THIS TIME.
-            </p>
-          </div>
-        )}
 
-        {displayedTrendingOutfit.length > 0 && (
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter">
             {displayedTrendingOutfit.map((item) => {
               const id = item._id || item.id;
@@ -115,7 +118,6 @@ const TrendingOutfit = ({limit}) => {
               );
             })}
           </div>
-        )}
 
       </section>
     </div>

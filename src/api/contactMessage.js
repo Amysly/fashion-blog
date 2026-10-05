@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "./config";
 
-const  MESSAGE_API = `${import.meta.env.VITE_API_URL}/api/contact`
+const MESSAGE_API = `${API_BASE_URL}/api/contact`
 const api = axios.create({
   baseURL: MESSAGE_API,
   withCredentials: true,

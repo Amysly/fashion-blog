@@ -1,7 +1,8 @@
 import axios from "axios";
 import { getStoredAccessToken } from "../lib/authToken";
+import { API_BASE_URL } from "./config";
 
-const TRENDING_API = `${import.meta.env.VITE_API_URL}/api/trending-outfit/`
+const TRENDING_API = `${API_BASE_URL}/api/trending-outfit/`;
 axios.defaults.withCredentials = true;
 
 const authHeader = () => ({

@@ -9,10 +9,13 @@ router.get('/:slug', blogController.getBlogBySlug);
 router
   .route("/admin/create-post")
   .post(
-    protect,
-    upload.single("image"),
-    blogController.createBlog
-  );
+  protect,
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "sectionImages", maxCount: 10 },
+  ]),
+  blogController.createBlog
+);
 
 router
   .route("/:id")

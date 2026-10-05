@@ -95,7 +95,7 @@ const deleteTrendingOutfit = asyncHandler(async (req, res) => {
     throw new Error("You don't have access to delete a trending product");
   }
 
-  const trnding = await TrendingOutfit.findById(req.params.id);
+  const trending = await TrendingOutfit.findById(req.params.id);
 
   if (!trending) {
     res.status(404);

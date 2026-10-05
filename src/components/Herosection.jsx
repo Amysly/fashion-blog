@@ -1,31 +1,75 @@
-import React from 'react'
-import bgImage from '../assets/images/bgimge.jpg';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getHeroSectionData } from '../api/HeroSection'; 
+import defaultBgImage from '../assets/images/bgimge.jpg';
 
 const Herosection = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [heroData, setHeroData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      try {
+        const data = await getHeroSectionData();
+        if (Array.isArray(data) && data.length > 0) {
+          setHeroData(data[0]);
+        } else if (data && typeof data === 'object') {
+          setHeroData(data);
+        }
+      } catch (error) {
+        console.error('Failed to load hero section data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHeroData();
+  }, []);
+
+  const title = heroData?.title;
+  const bgImageUrl = heroData?.image;
+
   return (
     <div>
+      <section className="relative w-full h-[870px] overflow-hidden">
+        <div
+          className="absolute inset-0  transition-all duration-700"
+          style={{
+            backgroundImage: `url(${bgImageUrl})`,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+             backgroundRepeat: 'no-repeat',
+             
+          }}
+        />
 
-<section className="relative w-full h-[870px] overflow-hidden">
-<div className="absolute inset-0 bg-cover bg-center" data-alt="A cinematic editorial fashion photograph of a woman wearing a flowing silk cream-colored dress in a sun-drenched, minimalist high-ceiling studio. The lighting is soft and directional, 
-casting gentle shadows that emphasize the texture of the fabric. The overall mood is serene and expensive, utilizing a palette of off-whites, 
-soft beiges, and subtle hints of sky blue. High-end magazine aesthetic with a quiet luxury feel." 
-style={{ backgroundImage: `url(${bgImage})`,
- backgroundPosition: 'center',
-  backgroundSize: 'cover'}}> 
-</div>
-<div className="absolute inset-0 hero-gradient"></div>
-<div className="absolute inset-0 flex flex-col items-center justify-end pb-24 text-center">
-<h2 className="text-white font-display-lg  text-display-lg-mobile md:text-display-lg   max-w-2xl mb-8 leading-tight">Helping women dress beautifully and confidently.</h2>
-<button 
-onClick={()=>navigate('/shop')}
-className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-10 py-4 rounded-lg font-label-caps
- text-label-caps tracking-widest hover:bg-white hover:text-primary transition-all duration-500">EXPLORE THE COLLECTION</button>
-</div>
-</section>
+      
+        <div className="absolute inset-0 hero-gradient" />
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 text-center px-4">
+          {loading ? (
+            <div className="animate-pulse space-y-4 max-w-2xl w-full flex flex-col items-center">
+              <div className="h-12 bg-white/20 rounded-lg w-3/4"></div>
+              <div className="h-12 bg-white/20 rounded-lg w-1/2"></div>
+            </div>
+          ) : (
+            <>
+              <h2 className="text-white font-display-lg text-display-lg-mobile md:text-display-lg max-w-2xl mb-8 leading-tight">
+                {title}
+              </h2>
+
+              <button
+                onClick={() => navigate('/shop')}
+                className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-10 py-4 rounded-lg font-label-caps text-label-caps tracking-widest hover:bg-white hover:text-primary transition-all duration-500"
+              >
+                EXPLORE THE COLLECTION
+              </button>
+            </>
+          )}
+        </div>
+      </section>
     </div>
-  )
-}
+  );
+};
 
-export default Herosection
+export default Herosection;
