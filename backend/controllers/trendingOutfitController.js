@@ -65,7 +65,7 @@ const updateTrendingOutfit = asyncHandler(async (req, res) => {
     throw new Error("You don't have access to update a trending  outfit");
   }
 
-  const trending = await Product.findById(req.params.id);
+  const trending = await TrendingOutfit.findById(req.params.id);
 
   if (!trending) {
     res.status(404);
@@ -82,7 +82,7 @@ const updateTrendingOutfit = asyncHandler(async (req, res) => {
     trending.image = result.secure_url;
   }
 
-  const updatedtrendingOutfit = await TrendingOutfit.save();
+  const updatedtrendingOutfit = await trending.save();
   res.status(200).json(updatedtrendingOutfit);
 });
 

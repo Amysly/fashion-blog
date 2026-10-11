@@ -106,7 +106,7 @@ const TrendingOutfit = ({limit}) => {
                 >
                   <div className="aspect-[3/4] overflow-hidden rounded-xl mb-4 delicate-shadow bg-surface-variant/20">
                     <img
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-700"
                       alt={title}
                       src={imageSrc}
                     />

@@ -60,7 +60,7 @@ const createHerosection = asyncHandler(async (req, res) => {
    const updatedHeroSection = await  heroSection.save();
    res.status(200).json(updatedHeroSection);
  });
-
+    
  const deleteHeroSection = asyncHandler(async (req, res) => {
     ensureAdmin(req, res);
    const heroSection = await HeroSection.findById(req.params.id);

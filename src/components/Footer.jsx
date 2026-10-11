@@ -4,6 +4,7 @@ import { FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { IoLogoFacebook } from "react-icons/io";
 import { createEmailSub } from '../api/subscribe';
+import logo from '../assets/images/logo.png';
 import { FaPinterest } from 'react-icons/fa';
 
 const Footer = () => {
@@ -44,10 +45,17 @@ const Footer = () => {
       <div className="max-w-[1200px] mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
 
         <div className="flex flex-col gap-6 mr-10">
-          <h2 className="font-headline-sm text-headline-sm italic text-on-surface">
-            The Style Parlor
+          <div className="flex items-center  gap-2 mt-2">
+            <img
+             src={logo}
+             alt="logo-image"
+              className="h-36 sm:h-32 w-auto object-contain -mt-15 -ml-15"
+             />
+          <h2 className="font-headline-sm text-headline-sm text-xl text-on-surface uppercase tracking-widest -mt-18 -ml-14">
+            TheStyleParlor
           </h2>
-          <p className="text-on-tertiary-fixed-variant text-body-md max-w-xs leading-relaxed">
+          </div>
+          <p className="text-on-tertiary-fixed-variant text-body-md max-w-xs leading-relaxed -mt-18">
             Defining the modern standard of quiet luxury and intentional living through a curated fashion lens.
           </p>
           <div className="flex gap-4">

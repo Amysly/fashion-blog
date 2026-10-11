@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Plus, Search, X, Loader2 } from 'lucide-react';
 import { getProducts, createProduct, updateProduct, deleteProduct } from '../../api/Product';
 import TextInput from '../components/TextInput';
 import AdminTable from '../components/AdminTable';
 import SearchInput from '../components/SearchInput';
-import Header from '../../components/Header'
-
+import Header from '../../components/Header';
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -15,7 +14,12 @@ const AdminProducts = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [formData, setFormData] = useState({ name: '', price: '', description: '',externalLink: '' });
+  const [formData, setFormData] = useState({
+    name: '',
+    price: '',
+    description: '',
+    externalLink: '',
+  });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [formError, setFormError] = useState('');
@@ -41,7 +45,7 @@ const AdminProducts = () => {
 
   const openCreateModal = () => {
     setEditingProduct(null);
-    setFormData({ name: '', price: '', description: '' });
+    setFormData({ name: '', price: '', description: '', externalLink: '' });
     setImageFile(null);
     setImagePreview(null);
     setFormError('');
@@ -52,8 +56,9 @@ const AdminProducts = () => {
     setEditingProduct(product);
     setFormData({
       name: product.name || '',
-      price: product.price || '',
-      description: product.description || ''
+      price: product.price ?? '',
+      description: product.description || '',
+      externalLink: product.externalLink || '',
     });
     setImageFile(null);
     setImagePreview(product.image || null);
@@ -62,13 +67,14 @@ const AdminProducts = () => {
   };
 
   const closeModal = () => {
-    if (imageFile && imagePreview) {
+    if (imagePreview && imagePreview.startsWith('blob:')) {
       URL.revokeObjectURL(imagePreview);
     }
     setIsModalOpen(false);
     setEditingProduct(null);
     setImageFile(null);
     setImagePreview(null);
+    setFormError('');
   };
 
   const handleChange = (e) => {
@@ -78,7 +84,7 @@ const AdminProducts = () => {
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (imageFile && imagePreview) {
+      if (imagePreview && imagePreview.startsWith('blob:')) {
         URL.revokeObjectURL(imagePreview);
       }
       setImageFile(file);
@@ -100,9 +106,9 @@ const AdminProducts = () => {
 
     const payload = new FormData();
     payload.append('name', formData.name.trim());
-    payload.append('price', formData.price);
+    payload.append('price', Number(formData.price));
     payload.append('description', formData.description.trim());
-    payload.append('externalLink', formData.externalLink.trim());
+    payload.append('externalLink', (formData.externalLink || '').trim());
     if (imageFile) payload.append('image', imageFile);
 
     setIsSaving(true);
@@ -110,7 +116,16 @@ const AdminProducts = () => {
       if (editingProduct) {
         const updated = await updateProduct(editingProduct._id, payload);
         setProducts((prev) =>
-          prev.map((p) => (p._id === editingProduct._id ? updated : p))
+          prev.map((p) =>
+            p._id === editingProduct._id
+              ? {
+                  ...p,
+                  ...updated,
+                  ...formData,
+                  price: Number(formData.price),
+                }
+              : p
+          )
         );
       } else {
         const created = await createProduct(payload);
@@ -138,20 +153,24 @@ const AdminProducts = () => {
     }
   };
 
-  const filteredProducts = products.filter((p) =>
-    p?.name?.toLowerCase().includes(search.toLowerCase())
+  const filteredProducts = useMemo(
+    () =>
+      products.filter((p) =>
+        p?.name?.toLowerCase().includes(search.toLowerCase())
+      ),
+    [products, search]
   );
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-          <Header
-          title='Product Catalog'
-          description='Manage product listings, update prices, and upload product images.'
-          item='Add New Product'
+        <Header
+          title="Product Catalog"
+          description="Manage product listings, update prices, and upload product images."
+          item="Add New Product"
           onClick={openCreateModal}
-       />
+        />
 
         {error && (
           <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-2">
@@ -159,26 +178,26 @@ const AdminProducts = () => {
           </p>
         )}
 
-         <SearchInput
-        items={filteredProducts}
+        <SearchInput
+          items={filteredProducts}
           onChange={(e) => setSearch(e.target.value)}
-         value={search}
-         title='products'
+          value={search}
+          title="products"
         />
 
-      <AdminTable
-        items={filteredProducts}
-        loading={loading}
-        deletingId={deletingId}
-        onEdit={openEditModal}
-        onDelete={handleDelete}
-        showPrice={true}
-      />
+        <AdminTable
+          items={filteredProducts}
+          loading={loading}
+          deletingId={deletingId}
+          onEdit={openEditModal}
+          onDelete={handleDelete}
+          showPrice={true}
+        />
 
         {/* Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm max-w-xl w-full space-y-5">
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-3 z-50 overflow-y-auto">
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm max-w-xl w-full space-y-5  mt-16">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <h3 className="font-serif text-lg font-bold text-[#0a1128]">
                   {editingProduct ? 'Edit Product' : 'Create New Product'}
@@ -198,7 +217,7 @@ const AdminProducts = () => {
                 </p>
               )}
 
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <TextInput
                   label="Product Name"
                   type="text"
@@ -207,38 +226,50 @@ const AdminProducts = () => {
                   onChange={handleChange}
                   placeholder="e.g. Velvet Evening Gown"
                 />
+
                 <TextInput
-                  label="Price (₦)"
+                  label="Price (USD)"
                   type="number"
                   name="price"
                   value={formData.price}
                   onChange={handleChange}
-                  placeholder="25000"
+                  placeholder="199.99"
+                  min="0"
+                  step="0.01"
                 />
-                <TextInput
-                label="Product Link"
-                   type="url"
+
+                {/* Full-width on md+ so the URL has room */}
+                <div className="md:col-span-2">
+                  <TextInput
+                    label="Product Link"
+                    type="url"
                     name="externalLink"
                     value={formData.externalLink}
                     onChange={handleChange}
                     placeholder="https://etsy.com/listing/..."
-                />
-                <TextInput
-                  label="Description"
-                  name="description"
-                  rows={3}
-                  value={formData.description}
-                  onChange={handleChange}
-                  placeholder="Provide details about this outfit..."
-                />
-               
-                <TextInput
-                  label="Product Image"
-                  imagePreview={imagePreview}
-                  type="file"
-                  accept="image/png, image/jpeg, image/webp"
-                  onChange={handleImageChange}
-                />
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <TextInput
+                    label="Description"
+                    name="description"
+                    rows={3}
+                    value={formData.description}
+                    onChange={handleChange}
+                    placeholder="Provide details about this outfit..."
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <TextInput
+                    label="Product Image"
+                    imagePreview={imagePreview}
+                    type="file"
+                    accept="image/png, image/jpeg, image/webp"
+                    onChange={handleImageChange}
+                  />
+                </div>
               </div>
 
               <div className="pt-2 flex justify-end gap-3">

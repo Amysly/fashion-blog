@@ -1,6 +1,16 @@
 import React from 'react';
 import { Image as ImageIcon, Edit, Trash2, Loader2 } from 'lucide-react';
 
+const formatUSD = (value) => {
+  const amount = Number(value);
+  if (!Number.isFinite(amount)) return '$0.00';
+
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount);
+};
+
 const AdminTable = ({ 
   items = [], 
   loading = false, 
@@ -53,7 +63,7 @@ const AdminTable = ({
                   <td className="py-4 px-6">
                     {showPrice ? (
                       <span className="font-semibold text-slate-700">
-                        ₦{Number(item.price || 0).toLocaleString()}
+                        {formatUSD(item.price)}
                       </span>
                     ) : (
                       <p className="text-slate-600 max-w-xs truncate">

@@ -26,6 +26,12 @@ const Shop = ({ limit }) => {
     }
   };
 
+  const formatUSD = (amount) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(amount);
+
   const displayedProducts = limit ? products.slice(0, limit) : products;
   if (loading) {
       return (
@@ -67,6 +73,8 @@ const Shop = ({ limit }) => {
           </h3>
         </div>
 
+        
+
        
 
        
@@ -74,16 +82,16 @@ const Shop = ({ limit }) => {
             {displayedProducts.map((product) => {
               const slug = product.slug;
               const title = product.name;
-              const price = typeof product.price === 'number' ? `${product.price.toLocaleString()}` : product.price;
+              const price = typeof product.price === 'number' ? formatUSD(product.price) : product.price;
               const imageSrc = product.image || product.images;
                const hasExternalLink = product.externalLink 
 
               return (
                 <div key={slug} className="text-center group">
-                  <div className="aspect-[3/4] bg-surface-variant/20 rounded-xl overflow-hidden mb-6">
+                  <div className="aspect-[4/4] bg-surface-variant/20 rounded-xl overflow-hidden mb-6">
                     <Link to={`/product/${slug}`}>
                       <img
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-700"
                         src={imageSrc}
                         alt={title}
                       />
@@ -93,7 +101,7 @@ const Shop = ({ limit }) => {
                     {title}
                   </p>
                   <p className="text-secondary mt-1 font-body-sm md:font-body-md">
-                    ₦{price}
+                     {price}
                   </p>
                  
                   <a

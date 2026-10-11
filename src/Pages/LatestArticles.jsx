@@ -63,7 +63,7 @@ const LatestArticles = () => {
     <div>
       <section className="mx-auto  px-margin-mobile md:px-margin-desktop py-section-gap grid grid-cols-1 lg:grid-cols-3 gap-16">
         <div className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center justify-between mb-10">
             <h3 className="font-headline-md text-headline-md">Latest Articles</h3>
           </div>
 
@@ -75,7 +75,7 @@ const LatestArticles = () => {
                   <article key={id} className="flex flex-col md:flex-row gap-8 group">
                     <div className="md:w-1/2 aspect-[4/4] overflow-hidden rounded-xl delicate-shadow bg-surface-variant/20">
                       <img
-                        className="w-full h-auto object-contain group-hover:scale-105 
+                        className="w-full h-auto object-cover group-hover:scale-105 
                         transition-transform duration-700"
                         src={post.image}
                         alt={post.title}

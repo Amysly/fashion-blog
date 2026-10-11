@@ -61,7 +61,7 @@ const TrendingOutfitDetail = () => {
             <img
               src={imageSrc}
               alt={name}
-              className="w-full h-full object-cover"
+              className="w-full h-auto object-contain"
             />
           </div>
 

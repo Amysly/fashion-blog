@@ -48,10 +48,14 @@ const ProductDetail = () => {
     product.image ||
     (Array.isArray(product.images) ? product.images[0] : product.images);
 
-  const formattedPrice =
-    typeof product.price === 'number'
-      ? ` ${product.price.toLocaleString()}`
-      : product.price;
+ const formatUSD = (amount) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(amount);
+
+
+ 
 
   return (
     <div className="bg-background min-h-screen">
@@ -73,7 +77,7 @@ const ProductDetail = () => {
             </h1>
 
             <p className="text-2xl font-body-md text-primary font-semibold">
-               ₦{formattedPrice}
+              {formatUSD(product.price)}
             </p>
 
             <p className="text-on-surface-variant text-sm leading-relaxed font-body-md">

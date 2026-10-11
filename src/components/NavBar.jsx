@@ -17,16 +17,20 @@ const NavBar = () => {
 
   return (
     <header className="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md">
-  <div className="px-2 md:px-8 flex justify-between items-center h-16 sm:h-20">
-    <div className="text-xl font-bold text-primary flex items-center relative">
-      <Link to="/" className="relative flex items-center w-36 sm:w-48 h-12">
-        <img
-          src={logo}
-          alt="logo-image"
-          className="absolute top-1/2 -translate-y-1/2 left-0 h-28 sm:h-40 w-auto max-w-none object-contain z-10"
-        />
-      </Link>
-    </div>
+      <div className="px-2 md:px-8 flex justify-between items-center h-16 sm:h-20">
+        <div className="flex items-center">
+          <Link to="/" className="relative flex items-center shrink-0">
+            <img
+              src={logo}
+              alt="logo-image"
+              className="h-34 sm:h-32 w-auto object-contain"
+            />
+          </Link>
+          <span className="text-on-surface-variant font-label-caps text-label-caps 
+          tracking-widest uppercase -ml-12">
+            TheStyleParlour
+          </span>
+        </div>
 
         <nav className="hidden md:flex items-center space-x-8">
           {navLinks.map((item) => (
@@ -47,7 +51,7 @@ const NavBar = () => {
         </nav>
 
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={() => navigate('/subscribe')}
             className="hidden md:block bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-caps text-label-caps tracking-widest cursor-pointer hover:opacity-90 transition-opacity"
           >
@@ -59,12 +63,7 @@ const NavBar = () => {
             className="md:hidden p-2 text-on-surface-variant hover:text-primary focus:outline-none"
             aria-label="Toggle Menu"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMobileMenuOpen ? (
                 <path
                   strokeLinecap="round"
@@ -87,15 +86,15 @@ const NavBar = () => {
 
       <div
         className={`
-          md:hidden 
-          bg-background 
-          px-4 
+          md:hidden
+          bg-background
+          px-4
           overflow-hidden
-          transition-all 
-          duration-300 
+          transition-all
+          duration-300
           ease-in-out
-          ${isMobileMenuOpen 
-            ? 'max-h-[500px] opacity-100 pt-2 pb-6' 
+          ${isMobileMenuOpen
+            ? 'max-h-[500px] opacity-100 pt-2 pb-6'
             : 'max-h-0 opacity-0 pt-0 pb-0'
           }
         `}
@@ -119,9 +118,11 @@ const NavBar = () => {
           ))}
 
           <div className="pt-2">
-            <button 
-             onClick={() => navigate('/subscribe')}
-              //onClick={() => setIsMobileMenuOpen(false)}
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                navigate('/subscribe');
+              }}
               className="w-full bg-primary text-on-primary px-6 py-3.5 rounded-lg font-label-caps text-label-caps tracking-widest cursor-pointer hover:opacity-90 transition-opacity"
             >
               SUBSCRIBE
