@@ -33,6 +33,7 @@ import LatestArticles from "./Pages/LatestArticles";
 import NewsLetter from "./Pages/NewsLetter";
 import AdminInspiredLook from "./Admin/pages/AdminInspiredLook";
 import AdminHeroSections from "./Admin/pages/AdminHerosection";
+import Blogs from "./Pages/Blogs";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,6 +44,7 @@ const router = createBrowserRouter(
          <Route path="/about" element={<About />} />
           <Route path="/contact-us" element={<Contact />} />
            <Route path="/blog" element={<LatestArticles />} />
+           <Route path="/blogs" element={<Blogs />} />
           <Route path="/subscribe" element={<NewsLetter />} />
         <Route path="/trending-outfit" element={<TrendingOutfit />} />
         <Route path="/blog/:slug" element={<PostDetail />} />
