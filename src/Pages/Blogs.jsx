@@ -8,12 +8,16 @@ const Blogs = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  
+
+  const normalizeText = (value, fallback = '') => {
+    return typeof value === 'string' ? value : fallback;
+  };
+
   const categories = useMemo(() => {
-    const cats = posts.map((p) => p.category || 'Beauty & Lifestyle');
+    const cats = posts.map((p) => normalizeText(p.category, 'Beauty & Lifestyle'));
     return ['All', ...new Set(cats)];
   }, [posts]);
 
@@ -33,7 +37,11 @@ const Blogs = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Recent';
-    return new Date(dateString).toLocaleDateString('en-US', {
+
+    const parsedDate = new Date(dateString);
+    if (Number.isNaN(parsedDate.getTime())) return 'Recent';
+
+    return parsedDate.toLocaleDateString('en-US', {
       month: 'long',
       day: 'numeric',
       year: 'numeric',
@@ -41,12 +49,20 @@ const Blogs = () => {
   };
 
   const filteredPosts = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
     return posts.filter((post) => {
+      const category = normalizeText(post.category, 'Beauty & Lifestyle');
+      const title = normalizeText(post.title, '');
+      const description = normalizeText(post.description, '');
+
       const matchesCategory =
-        selectedCategory === 'All' || (post.category || 'Beauty & Lifestyle') === selectedCategory;
+        selectedCategory === 'All' || category === selectedCategory;
       const matchesSearch =
-        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.description.toLowerCase().includes(searchQuery.toLowerCase());
+        normalizedQuery.length === 0 ||
+        title.toLowerCase().includes(normalizedQuery) ||
+        description.toLowerCase().includes(normalizedQuery);
+
       return matchesCategory && matchesSearch;
     });
   }, [posts, selectedCategory, searchQuery]);
@@ -72,7 +88,7 @@ const Blogs = () => {
      <header className="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop pt-16 pb-8 border-b border-outline-variant">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8">
           <div>
-            <span className="text-secondary font-label-caps text-[10px] tracking-widest mb-2 uppercase block mb-2">
+            <span className="text-secondary font-label-caps text-[10px] tracking-widest uppercase block mb-2">
               The Editorial Archive
             </span>
           </div>
@@ -138,8 +154,10 @@ const Blogs = () => {
               </div>
 
               <div className="space-y-10">
-                {filteredPosts.map((post) => {
-                  const id = post._id || post.slug;
+                {filteredPosts.map((post, index) => {
+                  const id = post._id || post.slug || `blog-post-${index}`;
+                  const articleLink = post.slug ? `/blog/${post.slug}` : '#';
+
                   return (
                     <article
                       key={id}

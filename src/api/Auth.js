@@ -1,9 +1,66 @@
 import axios from "axios";
-import { getStoredAccessToken } from '../lib/authToken';
+import { getStoredAccessToken, setStoredAccessToken } from '../lib/authToken';
 import { API_BASE_URL } from "./config";
 
 const AUTH_API = `${API_BASE_URL}/api/auth/`;
 axios.defaults.withCredentials = true;
+
+let refreshPromise;
+
+const requestRefresh = () => {
+    if (!refreshPromise) {
+        refreshPromise = axios.post(`${AUTH_API}refresh`)
+            .then(({ data }) => data?.accessToken ? data : null)
+            .catch((error) => {
+                if (error.response?.status === 401) return null;
+                throw error;
+            })
+            .finally(() => {
+                refreshPromise = null;
+            });
+    }
+
+    return refreshPromise;
+};
+
+axios.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const request = error.config;
+        const authorization = request?.headers?.Authorization || request?.headers?.authorization;
+        const isRefreshRequest = request?.url?.includes(`${AUTH_API}refresh`);
+
+        if (
+            error.response?.status !== 401 ||
+            !request ||
+            request._retriedAfterRefresh ||
+            isRefreshRequest ||
+            !authorization?.startsWith('Bearer ')
+        ) {
+            return Promise.reject(error);
+        }
+
+        request._retriedAfterRefresh = true;
+
+        try {
+            const session = await requestRefresh();
+            if (!session?.accessToken) {
+                setStoredAccessToken(null);
+                window.dispatchEvent(new Event('auth:session-expired'));
+                return Promise.reject(error);
+            }
+
+            setStoredAccessToken(session.accessToken);
+            request.headers = request.headers || {};
+            request.headers.Authorization = `Bearer ${session.accessToken}`;
+            return axios(request);
+        } catch (refreshError) {
+            setStoredAccessToken(null);
+            window.dispatchEvent(new Event('auth:session-expired'));
+            return Promise.reject(refreshError);
+        }
+    }
+);
 
 const authConfig = () => ({
     headers: { Authorization: `Bearer ${getStoredAccessToken()}` },
@@ -40,11 +97,8 @@ export const logoutUser = async () => {
 
 export const refreshAccessToken = async () => {
     try {
-        const res = await axios.post(`${AUTH_API}refresh`);
-        return res.status === 204 ? null : res.data;
+        return await requestRefresh();
     } catch (err) {
-        if (err.response?.status === 401) return null;
-
         const message = err.response?.data?.message || 'Failed to refresh token';
         throw new Error(message);
     }

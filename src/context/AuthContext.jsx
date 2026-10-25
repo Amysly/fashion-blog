@@ -35,6 +35,39 @@ export function AuthProvider({children}) {
     setStoredAccessToken(accessToken);
   }, [accessToken]);
 
+  useEffect(() => {
+    if (!accessToken || !user) return undefined;
+
+    const refreshSession = async () => {
+      try {
+        const session = await refreshAccessToken();
+        if (!session?.accessToken) {
+          setAccessToken(null);
+          setUser(null);
+          return;
+        }
+
+        setAccessToken(session.accessToken);
+        setUser(session.user);
+      } catch (err) {
+        console.error('Failed to refresh access token', err);
+      }
+    };
+
+    const intervalId = window.setInterval(refreshSession, 8 * 60 * 1000);
+    return () => window.clearInterval(intervalId);
+  }, [accessToken, user]);
+
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      setAccessToken(null);
+      setUser(null);
+    };
+
+    window.addEventListener('auth:session-expired', handleSessionExpired);
+    return () => window.removeEventListener('auth:session-expired', handleSessionExpired);
+  }, []);
+
   return (
     <AuthContext.Provider value={{ accessToken, setAccessToken, user, setUser, loading }}>
       {children}

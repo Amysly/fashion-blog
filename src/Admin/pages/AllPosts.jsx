@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, AlertTriangle } from 'lucide-react';
+import { X, AlertTriangle, Upload, Image as ImageIcon } from 'lucide-react';
 import { getBlogs, deleteBlog, updateBlog } from '../../api/Blog';
 import SearchInput from '../components/SearchInput';
 import AdminTable from '../components/AdminTable';
@@ -14,7 +14,14 @@ export default function AllPosts() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [postToEdit, setPostToEdit] = useState(null);
-  const [editFormData, setEditFormData] = useState({ title: '', category: '' });
+  const [editFormData, setEditFormData] = useState({
+    title: '',
+    name: '',
+    link: '',
+    category: '',
+    image: '',
+    imageFile: null,
+  });
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
@@ -48,9 +55,25 @@ export default function AllPosts() {
   const handleOpenEdit = (post) => {
     setPostToEdit(post);
     setEditFormData({
-      title: post.title || post.name || '',
+      title: post.title || '',
+      name: post.name || '',
+      link: post.link || '',
       category: post.category || '',
+      image: post.image || post.imageUrl || '',
+      imageFile: null,
     });
+  };
+
+  const handleImageFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setEditFormData({
+        ...editFormData,
+        image: previewUrl,
+        imageFile: file,
+      });
+    }
   };
 
   const handleUpdateSubmit = async (e) => {
@@ -79,7 +102,7 @@ export default function AllPosts() {
     .filter((post) => (post.title || post.name)?.toLowerCase().includes(search.toLowerCase()))
     .map((post) => ({
       ...post,
-      name: post.title || post.name, // Normalizes title to name for AdminTable
+      name: post.title || post.name,
       description: post.category ? `Category: ${post.category}` : post.description,
     }));
 
@@ -163,7 +186,7 @@ export default function AllPosts() {
       {/* Edit Modal */}
       {postToEdit && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <h3 className="text-lg font-bold text-[#0a1128]">Edit Article</h3>
               <button
@@ -175,6 +198,7 @@ export default function AllPosts() {
             </div>
 
             <form onSubmit={handleUpdateSubmit} className="space-y-4 mt-4">
+              {/* Title */}
               <div>
                 <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
                   Title
@@ -188,19 +212,95 @@ export default function AllPosts() {
                 />
               </div>
 
+              {/* Name */}
               <div>
                 <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
-                  Category
+                  Name
                 </label>
                 <input
                   type="text"
-                  required
-                  value={editFormData.category}
-                  onChange={(e) => setEditFormData({ ...editFormData, category: e.target.value })}
+                  value={editFormData.name}
+                  onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#034078]"
                 />
               </div>
 
+              {/* Link / Category */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+                    Link / URL
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.link}
+                    onChange={(e) => setEditFormData({ ...editFormData, link: e.target.value })}
+                    placeholder="https://..."
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#034078]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+                    Category
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.category}
+                    onChange={(e) => setEditFormData({ ...editFormData, category: e.target.value })}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#034078]"
+                  />
+                </div>
+              </div>
+
+              {/* Image Replacement Section */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+                  Post Image
+                </label>
+
+                {editFormData.image ? (
+                  <div className="mb-3 relative w-full h-44 bg-slate-50 rounded-lg border border-slate-200 overflow-hidden flex items-center justify-center group">
+                    <img
+                      src={editFormData.image}
+                      alt="Current Post"
+                      className="h-full w-full object-cover"
+                    />
+                    <label className="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white cursor-pointer">
+                      <Upload size={24} className="mb-1" />
+                      <span className="text-xs font-semibold">Click to Replace Image</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageFileChange}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                ) : (
+                  <label className="border-2 border-dashed border-slate-200 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer hover:border-[#034078] transition-colors mb-3">
+                    <ImageIcon size={32} className="text-slate-400 mb-2" />
+                    <span className="text-sm font-medium text-slate-700">Upload new image</span>
+                    <span className="text-xs text-slate-400 mt-1">PNG, JPG, WEBP</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageFileChange}
+                      className="hidden"
+                    />
+                  </label>
+                )}
+
+                {/* Optional Image URL Input */}
+                <input
+                  type="url"
+                  placeholder="Or paste image URL here..."
+                  value={editFormData.image.startsWith('blob:') ? '' : editFormData.image}
+                  onChange={(e) => setEditFormData({ ...editFormData, image: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#034078]"
+                />
+              </div>
+
+              {/* Modal Actions */}
               <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
                 <button
                   type="button"

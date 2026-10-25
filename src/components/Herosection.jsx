@@ -6,7 +6,6 @@ import defaultBgImage from '../assets/images/bgimge.jpg';
 const Herosection = () => {
   const navigate = useNavigate();
   const [heroData, setHeroData] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHeroData = async () => {
@@ -19,15 +18,13 @@ const Herosection = () => {
         }
       } catch (error) {
         console.error('Failed to load hero section data:', error);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchHeroData();
   }, []);
 
-  const title = heroData?.title;
+  const title = heroData?.title ;
   const bgImageUrl = heroData?.image;
 
   return (
@@ -36,36 +33,28 @@ const Herosection = () => {
         <div
           className="absolute inset-0  transition-all duration-700"
           style={{
-            backgroundImage: `url(${bgImageUrl})`,
+            backgroundImage: `url("${bgImageUrl}")`,
             backgroundPosition: 'center',
             backgroundSize: 'cover',
-             backgroundRepeat: 'no-repeat',
-             
+            backgroundRepeat: 'no-repeat',
           }}
         />
 
       
         <div className="absolute inset-0 hero-gradient" />
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 text-center px-4">
-          {loading ? (
-            <div className="animate-pulse space-y-4 max-w-2xl w-full flex flex-col items-center">
-              <div className="h-12 bg-white/20 rounded-lg w-3/4"></div>
-              <div className="h-12 bg-white/20 rounded-lg w-1/2"></div>
-            </div>
-          ) : (
-            <>
-              <h2 className="text-white font-display-lg text-display-lg-mobile md:text-display-lg max-w-2xl mb-8 leading-tight">
-                {title}
-              </h2>
+          <>
+            <h2 className="text-white font-display-lg text-display-lg-mobile md:text-display-lg max-w-2xl mb-8 leading-tight">
+              {title}
+            </h2>
 
-              <button
-                onClick={() => navigate('/shop')}
-                className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-10 py-4 rounded-lg font-label-caps text-label-caps tracking-widest hover:bg-white hover:text-primary transition-all duration-500"
-              >
-                EXPLORE THE COLLECTION
-              </button>
-            </>
-          )}
+            <button
+              onClick={() => navigate('/shop')}
+              className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-10 py-4 rounded-lg font-label-caps text-label-caps tracking-widest hover:bg-white hover:text-primary transition-all duration-500"
+            >
+              EXPLORE THE COLLECTION
+            </button>
+          </>
         </div>
       </section>
     </div>
