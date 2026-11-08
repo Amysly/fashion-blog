@@ -34,7 +34,6 @@ const renderMarkdownLinks = (text) => {
   let match;
 
   while ((match = markdownLinkRegex.exec(text)) !== null) {
-    // Push text before the link
     if (match.index > lastIndex) {
       parts.push(text.substring(lastIndex, match.index));
     }
@@ -58,7 +57,7 @@ const renderMarkdownLinks = (text) => {
     lastIndex = markdownLinkRegex.lastIndex;
   }
 
-  // Push any remaining text
+  
   if (lastIndex < text.length) {
     parts.push(text.substring(lastIndex));
   }
@@ -256,7 +255,7 @@ const PostDetail = () => {
                   rel="noopener noreferrer"
                   className="inline-flex items-center rounded-full bg-primary px-6 py-3 font-label-caps text-sm text-white transition-colors hover:bg-primary/80"
                 >
-                  Visit related link
+                  Shop Here
                 </a>
               </div>
             )}
