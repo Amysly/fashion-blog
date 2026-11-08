@@ -325,4 +325,4 @@ const PostDetail = () => {
   );
 };
 
-PostDetail;
+export default PostDetail;
