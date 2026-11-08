@@ -63,13 +63,13 @@ const Contact = () => {
     {
       icon: <HiOutlineMail className="text-2xl text-primary" />,
       title: "General Inquiries",
-      detail: "hello@thestyleparlor.com",
+      detail: "St.isabellexo@gmail.com",
       description: "Questions regarding our posts, style guides, or site content."
     },
     {
       icon: <HiOutlineSparkles className="text-2xl text-primary" />,
       title: "Press & Partnerships",
-      detail: "partnerships@thestyleparlor.com",
+      detail: "partnerships@styleparlour.co",
       description: "Brand collaborations, editorial features, and PR requests."
     },
     {
@@ -133,31 +133,13 @@ const Contact = () => {
               </p>
               <div className="flex items-center gap-3">
                 <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-surface-variant/40 flex items-center justify-center text-on-surface hover:bg-primary hover:text-on-primary transition-colors"
-                  aria-label="Instagram"
-                >
-                  <FaInstagram className="text-base" />
-                </a>
-                <a
-                  href="https://pinterest.com"
+                  href="https://pin.it/K9uDtmmGn"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-surface-variant/40 flex items-center justify-center text-on-surface hover:bg-primary hover:text-on-primary transition-colors"
                   aria-label="Pinterest"
                 >
                   <FaPinterestP className="text-base" />
-                </a>
-                <a
-                  href="https://tiktok.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-surface-variant/40 flex items-center justify-center text-on-surface hover:bg-primary hover:text-on-primary transition-colors"
-                  aria-label="TikTok"
-                >
-                  <FaTiktok className="text-base" />
                 </a>
               </div>
             </div>

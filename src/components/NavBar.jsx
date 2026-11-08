@@ -10,7 +10,6 @@ const NavBar = () => {
     { linkName: 'HOME', path: '/' },
     { linkName: 'BLOGS', path: '/blogs' },
     { linkName: 'SHOP', path: '/shop' },
-    { linkName: 'TRENDING OUTFIT', path: '/trending-outfit' },
     { linkName: 'ABOUT', path: '/about' },
     { linkName: 'CONTACT', path: '/contact-us' },
   ];
