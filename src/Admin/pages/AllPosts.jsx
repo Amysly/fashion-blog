@@ -232,7 +232,7 @@ export default function AllPosts() {
                     Link / URL
                   </label>
                   <input
-                    type="text"
+                    type="url"
                     value={editFormData.link}
                     onChange={(e) => setEditFormData({ ...editFormData, link: e.target.value })}
                     placeholder="https://..."

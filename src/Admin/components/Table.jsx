@@ -15,7 +15,7 @@ const Table = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [postToEdit, setPostToEdit] = useState(null);
-  const [editFormData, setEditFormData] = useState({ title: '', category: '' });
+  const [editFormData, setEditFormData] = useState({ title: '', category: '', link: '' });
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
@@ -52,6 +52,7 @@ const Table = () => {
     setEditFormData({
       title: post.title || post.name || '',
       category: post.category || '',
+      link: post.link || '',
     });
   };
 
@@ -212,6 +213,20 @@ const Table = () => {
                     setEditFormData((prev) => ({ ...prev, category: e.target.value }))
                   }
                   required
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#034078]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
+                  Link / URL
+                </label>
+                <input
+                  type="url"
+                  value={editFormData.link}
+                  onChange={(e) =>
+                    setEditFormData((prev) => ({ ...prev, link: e.target.value }))
+                  }
+                  placeholder="https://example.com"
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#034078]"
                 />
               </div>

@@ -17,6 +17,34 @@ const ensureValidBlogId = (id, res) => {
   }
 };
 
+const validatePostLink = (value, res) => {
+  if (value === undefined || value === null || value === "") {
+    return "";
+  }
+
+  if (typeof value !== "string") {
+    res.status(400);
+    throw new Error("Please provide a valid HTTP or HTTPS link");
+  }
+
+  const link = value.trim();
+  if (!link) {
+    return "";
+  }
+
+  try {
+    const url = new URL(link);
+    if (url.protocol === "http:" || url.protocol === "https:") {
+      return link;
+    }
+  } catch {
+    // Invalid URLs are handled by the response below.
+  }
+
+  res.status(400);
+  throw new Error("Please provide a valid HTTP or HTTPS link");
+};
+
 // @desc    Get all blogs
 // @route   GET /api/blog
 // @access  Public
@@ -33,6 +61,7 @@ const createBlog = asyncHandler(async (req, res) => {
   ensureAdmin(req, res);
 
   const { title, description, category, sections } = req.body;
+  const link = validatePostLink(req.body.link, res);
 
   if (!title || !description || !category) {
     res.status(400);
@@ -85,6 +114,7 @@ const createBlog = asyncHandler(async (req, res) => {
   const blog = await Blog.create({
     title,
     description,
+    link,
     category,
     image: coverResult.secure_url,
     sections: uploadedSections,
@@ -132,6 +162,9 @@ const updateBlog = asyncHandler(async (req, res) => {
 
   blog.title = req.body.title || blog.title;
   blog.description = req.body.description || blog.description;
+  if (req.body.link !== undefined) {
+    blog.link = validatePostLink(req.body.link, res);
+  }
   blog.category = req.body.category || blog.category;
   blog.image = image;
 

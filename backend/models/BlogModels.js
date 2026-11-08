@@ -22,6 +22,11 @@ const blogSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please enter blog description'],
     },
+    link: {
+      type: String,
+      trim: true,
+      default: '',
+    },
     image: {
       type: String,
     },

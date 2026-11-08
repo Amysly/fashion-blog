@@ -18,6 +18,7 @@ export default function CreatePost() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    link: '',
     category: '',
   });
 
@@ -140,6 +141,7 @@ export default function CreatePost() {
    
     payload.append('title', formData.title);
     payload.append('description', formData.description);
+    payload.append('link', formData.link);
     payload.append('category', formData.category);
 
    
@@ -256,6 +258,24 @@ export default function CreatePost() {
               placeholder="Provide a brief summary for newsletter previews..."
               className="w-full p-4 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#034078]"
             />
+          </div>
+
+          {/* Optional article link */}
+          <div>
+            <label className="block text-sm font-semibold text-[#0a1128] mb-2">
+              Related Link (optional)
+            </label>
+            <input
+              type="url"
+              name="link"
+              value={formData.link}
+              onChange={handleChange}
+              placeholder="https://example.com"
+              className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#034078]"
+            />
+            <p className="mt-1 text-xs text-slate-500">
+              Readers will see a clickable link at the end of the article.
+            </p>
           </div>
 
           {/* Category */}

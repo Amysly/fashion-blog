@@ -9,6 +9,17 @@ import {
 import { getBlogBySlug, getBlogs } from '../api/Blog';
 import Spinner from '../components/Spinner';
 
+const isSafeExternalLink = (link) => {
+  if (typeof link !== 'string') return false;
+
+  try {
+    const url = new URL(link);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
+
 const PostDetail = () => {
   const { slug } = useParams();
 
@@ -200,7 +211,19 @@ const PostDetail = () => {
                 </div>
               )}
 
-            
+            {isSafeExternalLink(post.link) && (
+              <div className="mt-12">
+                <a
+                  href={post.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center rounded-full bg-primary px-6 py-3 font-label-caps text-sm text-white transition-colors hover:bg-primary/80"
+                >
+                  Visit related link
+                </a>
+              </div>
+            )}
+
             <div className="mt-16 pt-6 border-t border-outline-variant/30 flex items-center gap-2">
               <span className="font-label-caps text-xs text-on-surface-variant">
                 TAGS:
