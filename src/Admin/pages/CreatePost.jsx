@@ -45,7 +45,6 @@ export default function CreatePost() {
     }
   };
 
-  
   const addSection = () => {
     setSections((prev) => [
       ...prev,
@@ -53,18 +52,18 @@ export default function CreatePost() {
         heading: '',
         description: '',
         image: null,
+        linkText: '',
+        linkUrl: '',
       },
     ]);
   };
 
-  
   const removeSection = (index) => {
     setSections((prev) =>
       prev.filter((_, i) => i !== index)
     );
   };
 
-  
   const handleSectionChange = (index, field, value) => {
     setSections((prev) =>
       prev.map((section, i) =>
@@ -78,7 +77,6 @@ export default function CreatePost() {
     );
   };
 
- 
   const handleSectionImageChange = (index, file) => {
     if (!file) return;
 
@@ -94,10 +92,33 @@ export default function CreatePost() {
     );
   };
 
+  const handleInsertSectionLink = (index) => {
+    const section = sections[index];
+    if (!section.linkUrl) return;
+
+    const displayLabel = section.linkText.trim() || section.linkUrl;
+    const markdownLink = ` [${displayLabel}](${section.linkUrl}) `;
+
+    const updatedDescription = (section.description || '') + markdownLink;
+
+    // Update description and reset the temporary link inputs for this section
+    setSections((prev) =>
+      prev.map((sec, i) =>
+        i === index
+          ? {
+              ...sec,
+              description: updatedDescription,
+              linkText: '',
+              linkUrl: '',
+            }
+          : sec
+      )
+    );
+  };
+
   const handlePublish = async () => {
     setError('');
 
-    
     if (
       !formData.title ||
       !formData.description ||
@@ -109,13 +130,11 @@ export default function CreatePost() {
       return;
     }
 
-    
     if (!imageFile) {
       setError('Please upload a featured image.');
       return;
     }
 
-   
     for (const [index, section] of sections.entries()) {
       if (!section.heading || !section.description) {
         setError(
@@ -138,16 +157,12 @@ export default function CreatePost() {
 
     const payload = new FormData();
 
-   
     payload.append('title', formData.title);
     payload.append('description', formData.description);
     payload.append('link', formData.link);
     payload.append('category', formData.category);
-
-   
     payload.append('image', imageFile);
 
-   
     payload.append(
       'sections',
       JSON.stringify(
@@ -392,6 +407,40 @@ export default function CreatePost() {
                     placeholder="Explain this styling idea..."
                     className="w-full p-4 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#034078]"
                   />
+
+                  {/* Section Link Builder Tool */}
+                  <div className="mt-3 p-3 bg-white border border-slate-200 rounded-xl space-y-2">
+                    <span className="block text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                      Embed Link into this Description
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <input
+                        type="text"
+                        placeholder="Link text (e.g., Shop this look)"
+                        value={section.linkText}
+                        onChange={(e) =>
+                          handleSectionChange(index, 'linkText', e.target.value)
+                        }
+                        className="px-3 py-2 border border-slate-200 rounded-lg text-xs bg-slate-50 focus:outline-none focus:border-[#034078]"
+                      />
+                      <input
+                        type="url"
+                        placeholder="URL (https://example.com)"
+                        value={section.linkUrl}
+                        onChange={(e) =>
+                          handleSectionChange(index, 'linkUrl', e.target.value)
+                        }
+                        className="px-3 py-2 border border-slate-200 rounded-lg text-xs bg-slate-50 focus:outline-none focus:border-[#034078]"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleInsertSectionLink(index)}
+                      className="px-3 py-1.5 bg-[#034078] text-white rounded-lg text-xs font-medium hover:bg-[#022c54] transition-colors"
+                    >
+                      Insert Link
+                    </button>
+                  </div>
                 </div>
 
                 {/* Section image */}

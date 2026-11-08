@@ -20,6 +20,52 @@ const isSafeExternalLink = (link) => {
   }
 };
 
+/**
+ * Helper function to parse simple [Text](URL) markdown links into safe React anchor elements.
+ */
+const renderMarkdownLinks = (text) => {
+  if (!text) return null;
+
+  // Regex to match [Link Text](https://example.com)
+  const markdownLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = markdownLinkRegex.exec(text)) !== null) {
+    // Push text before the link
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index));
+    }
+
+    const label = match[1];
+    const url = match[2];
+
+    // Push the interactive anchor tag
+    parts.push(
+      <a
+        key={match.index}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-primary underline font-medium hover:text-primary/80 transition-colors"
+      >
+        {label}
+      </a>
+    );
+
+    lastIndex = markdownLinkRegex.lastIndex;
+  }
+
+  // Push any remaining text
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+
+  return parts;
+};
+
 const PostDetail = () => {
   const { slug } = useParams();
 
@@ -120,10 +166,7 @@ const PostDetail = () => {
         {/* Article */}
         {!loading && !error && post && (
           <article>
-
-          
             <div className="text-center max-w-2xl mx-auto mb-8">
-
               <span className="text-secondary font-label-caps text-[11px] tracking-[0.2em] uppercase">
                 {post.category || 'Lifestyle'}
                 {' • '}
@@ -135,17 +178,15 @@ const PostDetail = () => {
               </h1>
             </div>
 
-          
-          {post.image && (
-          <div className="w-full overflow-hidden rounded-2xl delicate-shadow my-8 bg-surface-variant/20">
-            <img
-              src={post.image}
-              alt={post.title}
-              className="w-full h-auto object-contain"
-            />
-          </div>
-        )}
-
+            {post.image && (
+              <div className="w-full overflow-hidden rounded-2xl delicate-shadow my-8 bg-surface-variant/20">
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+            )}
 
             {post.description && (
               <p className="font-body-lg text-lg md:text-xl text-on-surface-variant leading-relaxed whitespace-pre-line mb-12 italic border-l-2 border-primary pl-4">
@@ -153,11 +194,9 @@ const PostDetail = () => {
               </p>
             )}
 
-          
             {post.sections &&
               post.sections.length > 0 && (
                 <div className="space-y-16">
-
                   {post.sections.map(
                     (section, index) => (
                       <section
@@ -167,8 +206,6 @@ const PostDetail = () => {
                         }
                         className="space-y-5"
                       >
-
-                    
                         {section.heading && (
                           <div>
                             <span className="text-secondary font-label-caps text-xs tracking-[0.2em] uppercase">
@@ -199,10 +236,10 @@ const PostDetail = () => {
                           </div>
                         )}
 
-                        {/* Section Description */}
+                        {/* Section Description with Link parsing */}
                         {section.description && (
                           <p className="font-body-lg text-base md:text-lg text-on-surface-variant leading-8 whitespace-pre-line">
-                            {section.description}
+                            {renderMarkdownLinks(section.description)}
                           </p>
                         )}
                       </section>
@@ -236,18 +273,13 @@ const PostDetail = () => {
           </article>
         )}
 
-        {/* =========================
-            RELATED / POPULAR ARTICLES
-        ========================== */}
         {!loading && relatedPosts.length > 0 && (
           <section className="mt-20 pt-12 border-t border-outline-variant/30">
-
             <h3 className="font-headline-md text-2xl font-bold mb-8">
               Popular Reads
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
               {relatedPosts.map((related) => {
                 const relId =
                   related.slug ||
@@ -259,10 +291,8 @@ const PostDetail = () => {
                     to={`/blog/${relId}`}
                     className="group flex flex-col"
                   >
-
                     {/* Related Image */}
                     <div className="aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-surface-variant/20">
-
                       {related.image && (
                         <img
                           src={related.image}
@@ -273,7 +303,6 @@ const PostDetail = () => {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       )}
-
                     </div>
 
                     {/* Category */}
@@ -297,4 +326,4 @@ const PostDetail = () => {
   );
 };
 
-export default PostDetail;
+PostDetail;
