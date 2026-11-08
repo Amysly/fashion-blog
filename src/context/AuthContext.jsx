@@ -8,10 +8,14 @@
     const AuthContext = createContext()
 
 export function AuthProvider({children}) {
-    const [accessToken, setAccessToken] = useState(null);
+    const [accessToken, setAccessTokenState] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); 
 
+  const setAccessToken = (token) => {
+    setStoredAccessToken(token);
+    setAccessTokenState(token);
+  };
 
    useEffect(() => {
     const loadAuth = async () => {
@@ -30,10 +34,6 @@ export function AuthProvider({children}) {
     };
     loadAuth();
   }, []);
-
-  useEffect(() => {
-    setStoredAccessToken(accessToken);
-  }, [accessToken]);
 
   useEffect(() => {
     if (!accessToken || !user) return undefined;

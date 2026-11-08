@@ -2,7 +2,7 @@ import axios from "axios";
 import { getStoredAccessToken } from "../lib/authToken";
 import { API_BASE_URL } from "./config";
 
-const ANALYTICS_API = `${API_BASE_URL}api/analytics`;
+const ANALYTICS_API = `${API_BASE_URL}/api/analytics`;
 
 axios.defaults.withCredentials = true;
 
