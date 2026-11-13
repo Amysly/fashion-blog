@@ -267,7 +267,7 @@ export default function CreatePost() {
 
             <textarea
               name="description"
-              rows={2}
+              rows={12}
               value={formData.description}
               onChange={handleChange}
               placeholder="Provide a brief summary for newsletter previews..."
@@ -395,7 +395,7 @@ export default function CreatePost() {
                   </label>
 
                   <textarea
-                    rows={4}
+                    rows={10}
                     value={section.description}
                     onChange={(e) =>
                       handleSectionChange(

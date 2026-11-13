@@ -126,7 +126,7 @@ const Contact = () => {
 
             <div className="bg-surface-variant/10 border border-outline-variant/30 rounded-2xl p-6">
               <h3 className="font-headline-sm text-base font-bold mb-2">
-                Follow The Parlor
+                Follow Thestyleparlor
               </h3>
               <p className="text-on-surface-variant text-xs mb-4">
                 Join our community across social platforms for daily style curation.

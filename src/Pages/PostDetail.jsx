@@ -247,6 +247,7 @@ const PostDetail = () => {
                 </div>
               )}
 
+ {/* Section Description with Link parsing 
             {isSafeExternalLink(post.link) && (
               <div className="mt-12">
                 <a
@@ -259,6 +260,7 @@ const PostDetail = () => {
                 </a>
               </div>
             )}
+              */}
 
             <div className="mt-16 pt-6 border-t border-outline-variant/30 flex items-center gap-2">
               <span className="font-label-caps text-xs text-on-surface-variant">
