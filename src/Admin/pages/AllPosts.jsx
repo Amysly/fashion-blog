@@ -16,7 +16,7 @@ export default function AllPosts() {
   const [postToEdit, setPostToEdit] = useState(null);
   const [editFormData, setEditFormData] = useState({
     title: '',
-    name: '',
+    description: '',
     link: '',
     category: '',
     image: '',
@@ -56,7 +56,7 @@ export default function AllPosts() {
     setPostToEdit(post);
     setEditFormData({
       title: post.title || '',
-      name: post.name || '',
+      description: post.description || '',
       link: post.link || '',
       category: post.category || '',
       image: post.image || post.imageUrl || '',
@@ -99,11 +99,12 @@ export default function AllPosts() {
   };
 
   const filteredPosts = posts
-    .filter((post) => (post.title || post.name)?.toLowerCase().includes(search.toLowerCase()))
+    .filter((post) => (post.title)?.toLowerCase().includes(search.toLowerCase()))
     .map((post) => ({
       ...post,
-      name: post.title || post.name,
-      description: post.category ? `Category: ${post.category}` : post.description,
+      title: post.title ,
+      description: post.description,
+      category: post.category
     }));
 
   return (
@@ -215,11 +216,11 @@ export default function AllPosts() {
               {/* Name */}
               <div>
                 <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
-                  Name
+                Description
                 </label>
                 <input
                   type="text"
-                  value={editFormData.name}
+                  value={editFormData.description}
                   onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#034078]"
                 />
